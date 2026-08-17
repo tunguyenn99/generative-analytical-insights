@@ -1,6 +1,6 @@
 WITH date_spine AS (
     SELECT CAST('2024-01-01' AS DATE) + INTERVAL (i) DAY AS date_day
-    FROM RANGE(0, 365)
+    FROM range(0, 365) AS t(i)
 )
 
 SELECT

@@ -29,7 +29,12 @@ jobs:
         run: |
           pre-commit run --all-files
 
-      - name: Test dbt Models Compilation
+      - name: Generate Sample Data & Load DuckDB Warehouse
+        run: |
+          python generate_sample_data.py
+          python scripts/load_raw_duckdb.py
+
+      - name: Build & Test dbt Medallion Models
         run: |
           cd zomato_dbt
-          dbt compile
+          dbt build
