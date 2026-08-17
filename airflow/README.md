@@ -1,17 +1,8 @@
-<div align="center">
-
-# ⏱️ Apache Airflow Orchestration (`airflow/`)
-
-<p align="center">
-  <a href="#-english-version"><b>🇬🇧 English Version</b></a> | <a href="#-tiếng-việt-version"><b>🇻🇳 Tiếng Việt Version</b></a>
-</p>
-
----
-
+<div align="right">
+  <b>🇬🇧 English</b> | <a href="README.vn.md">🇻🇳 Tiếng Việt</a>
 </div>
 
-<a name="-english-version"></a>
-# 🇬🇧 Apache Airflow Orchestration (English)
+# ⏱️ Apache Airflow Orchestration (`airflow/`)
 
 The `airflow/` directory contains Apache Airflow DAG definitions for automated batch scheduling and daily incremental data ingestion for the Zomato data engineering pipeline.
 
@@ -42,16 +33,10 @@ airflow/
 
 ---
 
-<hr>
+## ⚙️ Execution & Triggering
 
-<a name="-tiếng-việt-version"></a>
-# 🇻🇳 Điều Phối Dữ Liệu Apache Airflow (Tiếng Việt)
-
-Thư mục `airflow/` chứa các định nghĩa Airflow DAGs định kỳ điều phối luồng dữ liệu tự động cho dự án Zomato Data Engineering.
-
----
-
-## 🔄 Danh Sách DAGs
-
-1. **`zomato_batch_dag`**: DAG điều phối toàn bộ chuỗi batch từ tạo dữ liệu thô ➔ tải lên S3 ➔ nạp DuckDB ➔ dbt build ➔ Gemini LLM enrichment.
-2. **`zomato_daily_incremental_dag`**: DAG điều phối phát sinh dữ liệu ngẫu nhiên mới hàng ngày (`0 0 * * *`) và làm mới các tầng Medallion trong DuckDB.
+Verify DAG syntax locally:
+```bash
+python3 airflow/dags/zomato_batch_dag.py
+python3 airflow/dags/zomato_daily_incremental_dag.py
+```

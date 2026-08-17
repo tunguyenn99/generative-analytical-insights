@@ -1,17 +1,8 @@
-<div align="center">
-
-# 🏛️ dbt Medallion Transformation Pipeline (`zomato_dbt/`)
-
-<p align="center">
-  <a href="#-english-version"><b>🇬🇧 English Version</b></a> | <a href="#-tiếng-việt-version"><b>🇻🇳 Tiếng Việt Version</b></a>
-</p>
-
----
-
+<div align="right">
+  <b>🇬🇧 English</b> | <a href="README.vn.md">🇻🇳 Tiếng Việt</a>
 </div>
 
-<a name="-english-version"></a>
-# 🇬🇧 dbt Medallion Transformation Pipeline (English)
+# 🏛️ dbt Medallion Transformation Pipeline (`zomato_dbt/`)
 
 The `zomato_dbt/` directory contains the dbt Core project configured with `dbt-duckdb` for data modeling, Medallion Architecture transformations, schema documentation (`docs.md`), and automated data quality testing.
 
@@ -73,38 +64,6 @@ dbt build
 ```
 
 Generate schema documentation catalog:
-```bash
-dbt docs generate
-```
-
----
-
-<hr>
-
-<a name="-tiếng-việt-version"></a>
-# 🇻🇳 Mô Hình Biến Đổi dbt Medallion (Tiếng Việt)
-
-Thư mục `zomato_dbt/` chứa mã nguồn dbt Core kết nối `dbt-duckdb` quản lý quá trình biến đổi dữ liệu chuẩn Medallion Architecture, kiểm thử chất lượng và tài liệu hóa schema (`docs.md`).
-
----
-
-## 🏆 Các Tầng Kiến Trúc Medallion
-
-1. **Bronze Layer (`ZOMATO_RAW`)**: Tầng dữ liệu thô nạp từ S3 CSVs.
-2. **Silver Layer (`STAGING`)**: Tầng chuẩn hóa kiểu dữ liệu, làm sạch tên cột và xử lý giá trị khuyết thiếu.
-3. **Gold Layer (`MARTS`)**: Tầng dữ liệu phân tích kinh doanh gồm bảng Chiều (Dimensions), Bảng Sự kiện (Fact) và các bảng Báo cáo (Marts).
-
----
-
-## 🧪 Kiểm Thử & Tạo Tài Liệu Schema
-
-Thực thi biến đổi và kiểm thử 35 data assertions:
-```bash
-cd zomato_dbt
-dbt build
-```
-
-Sinh trang web tài liệu dbt catalog:
 ```bash
 dbt docs generate
 ```

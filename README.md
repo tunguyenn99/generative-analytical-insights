@@ -1,17 +1,8 @@
-<div align="center">
-
-# 🍕 Zomato AI & Data Engineering Intelligence Platform
-
-<p align="center">
-  <a href="#-english-version"><b>🇬🇧 English Version</b></a> | <a href="#-tiếng-việt-version"><b>🇻🇳 Tiếng Việt Version</b></a>
-</p>
-
----
-
+<div align="right">
+  <b>🇬🇧 English</b> | <a href="README.vn.md">🇻🇳 Tiếng Việt</a>
 </div>
 
-<a name="-english-version"></a>
-# 🇬🇧 Zomato AI & Data Engineering Platform (English)
+# 🍕 Zomato AI & Data Engineering Intelligence Platform
 
 An end-to-end modern batch data engineering and generative AI analytics platform. Built locally with **AWS LocalStack S3**, **DuckDB Data Warehouse**, **dbt Medallion Architecture**, **Apache Airflow**, **Google Gemini AI (`gemini-3.5-flash`)**, **Pre-Commit / CI Quality Governance**, and an interactive multi-page **Streamlit Web Application**.
 
@@ -94,6 +85,17 @@ An end-to-end modern batch data engineering and generative AI analytics platform
 
 ---
 
+## 💡 Architectural Deep-Dive: Text-to-SQL vs. dbt MetricFlow
+
+| Criteria | 🤖 Generative Text-to-SQL (Chosen Approach) | 📐 dbt MetricFlow / Semantic Layer |
+| :--- | :--- | :--- |
+| **Query Flexibility** | **Unrestricted Ad-hoc Natural Language**: Can answer arbitrary questions across any dimensions and tables. | **Restricted to Pre-defined Metrics**: Can only query metrics explicitly defined in `semantic_models` YML files. |
+| **User Experience** | **Conversational UI**: Non-technical users ask questions in natural language (English/Vietnamese). | **API / Code Driven**: Requires GraphQL/dbt Semantic Layer API or CLI commands. |
+| **Infrastructure Cost** | **Zero Extra Infrastructure Cost**: Runs locally against DuckDB using free-tier LLM APIs. | **Requires dbt Cloud / Proxy**: Production deployment requires dbt Cloud Semantic Layer API or custom proxy host. |
+| **Setup Overhead** | **Low Setup**: Prompt engineering + schema context injection from dbt `schema.yml`. | **High Setup**: Requires writing hundreds of lines of YAML for dimensions, entities, and measure aggregations. |
+
+---
+
 ## 🏛️ Medallion Architecture (dbt Data Layers)
 
 ```
@@ -106,77 +108,21 @@ data/warehouse/zomato_dw.duckdb
 
 ---
 
-<hr>
+## 🚀 Getting Started
 
-<a name="-tiếng-việt-version"></a>
-# 🇻🇳 Zomato AI & Data Engineering Platform (Tiếng Việt)
-
-Platform phân tích dữ liệu batch hiện đại và trí tuệ nhân tạo Generative AI end-to-end. Dự án được phát triển hoàn toàn ở môi trường Local tích hợp **AWS LocalStack S3**, **DuckDB Data Warehouse**, **dbt Medallion Architecture**, **Apache Airflow**, **Google Gemini AI (`gemini-3.5-flash`)**, **Pre-Commit / CI Quality Governance**, và ứng dụng web đa trang **Streamlit**.
-
----
-
-## 📐 Sơ Đồ Kiến Trúc & Luồng Dữ Liệu (Chuẩn Excalidraw)
-
-![Data Architecture Diagram](images/architecture_diagram.png)
-
-### 🔄 Quy Trình Tự Động Hóa End-to-End:
-1. **Khởi Tạo Dữ Liệu & Daily Incremental**: Tự động sinh dữ liệu thô Zomato qua 7 bảng (`restaurants`, `users`, `food`, `menu`, `orders`, `order_items`, `reviews`) và chạy job phát sinh dữ liệu ngẫu nhiên hàng ngày (`scripts/generate_daily_incremental_data.py`).
-2. **Lưu Trữ Dữ Liệu Thô (AWS LocalStack S3)**: Giả lập AWS S3 (`s3://zomato-data-lake/raw/`) chạy qua Docker Compose.
-3. **Kho Dữ Liệu Phân Tích (DuckDB)**: Embedded OLAP Data Warehouse tốc độ cao (`data/warehouse/zomato_dw.duckdb`).
-4. **Biến Đổi & Kiểm Duyệt Chất Lượng (dbt Core)**: Mô hình Medallion (Bronze Raw ➔ Silver Staging ➔ Gold Business Marts) đi kèm 35+ data quality assertions (`dbt test`) và tài liệu schema chuẩn (`docs.md`).
-5. **Chuẩn Hóa Mã Nguồn & CI/CD**: Kiểm tra mã nguồn tự động qua Pre-commit hooks (**Black** Python formatter, **SQLFluff** SQL linter với dialect DuckDB) và GitHub Actions Workflows (`ci_pipeline.yml`, `daily_incremental_pipeline.yml`).
-6. **Tầng Trí Tuệ Nhân Tạo (Google Gemini API - Free Tier)**: Phân tích cảm xúc đánh giá khách hàng, tìm kiếm vector RAG và chuyển đổi câu hỏi tự nhiên thành câu lệnh SQL (`gemini-3.5-flash`).
-7. **Giao Diện Web Phân Tích (Streamlit)**: Ứng dụng web đa trang hiển thị chỉ số KPI thời gian thực, biểu đồ Plotly, RAG Q&A và Text-to-SQL Query Studio.
-
----
-
-## 🖥️ Màn Hình Giao Diện Web
-
-### 1. 🏠 Executive Overview & Pipeline Health
-![System Overview Dashboard](images/overview_dashboard.png)
-- **KPI Tổng Quan**: Tổng đơn hàng, Doanh thu Gross GMV, Nhà hàng đối tác, và số lượng đánh giá được AI làm giàu.
-- **Trạng Thái Pipeline**: Kiểm tra kết nối thời gian thực tới LocalStack S3, DuckDB Warehouse, dbt Tests (35/35 PASSED), và Gemini LLM API.
-
----
-
-### 2. 📊 BI Analytics Dashboard
-![BI Analytics Dashboard](images/analytics_dashboard.png)
-- **Xu Hướng GMV Hàng Ngày**: Biểu đồ đường tương tác hiển thị doanh thu theo từng thành phố.
-- **Tỷ Lệ Hủy Đơn**: Theo dõi phần trăm đơn hủy theo khu vực.
-- **Top Nhà Hàng Theo GMV**: Xếp hạng nhà hàng doanh thu cao nhất.
-- **Thời Gian Giao Hàng SLA**: So sánh thời gian giao trung vị (P50) và percentile 90 (P90) theo khung giờ trong ngày.
-
----
-
-### 3. 💬 Review RAG Intelligence Assistant
-![Review RAG Assistant](images/rag_assistant.png)
-- **Tìm Kiếm Vector & Tổng Hợp LLM**: Kết hợp TF-IDF similarity trên đánh giá khách hàng với **Google Gemini (`gemini-3.5-flash`)**.
-- **Câu Trả Lời Minh Bạch**: Trích dẫn chính xác trích dẫn đánh giá, số sao và tên nhà hàng.
-
----
-
-### 4. 🤖 Text-to-SQL Natural Language Query Studio
-![Text-to-SQL Query Studio](images/text_to_sql_studio.png)
-- **Truy Vấn Ngôn Ngữ Tự Nhiên sang SQL**: Chuyển đổi câu hỏi tiếng Anh/tiếng Việt thành câu lệnh SQL DuckDB (chế độ Read-only).
-- **Trực Quan Hóa Tự Động**: Thực thi SQL trên schema `MARTS` và tự động vẽ biểu đồ cột Plotly.
-
----
-
-## 🚀 Hướng Dẫn Chạy Dự Án
-
-### 1. Khởi Động Hạ Tầng LocalStack S3
+### 1. Start AWS LocalStack S3 Service
 ```bash
 docker compose up -d localstack
 python3 scripts/init_localstack_s3.py
 ```
 
-### 2. Chạy Toàn Bộ Pipeline End-to-End
+### 2. Run End-to-End Pipeline
 ```bash
 python3 scripts/run_pipeline.py
 ```
 
-### 3. Mở Giao Diện Web Streamlit
+### 3. Launch Streamlit Dashboard
 ```bash
 streamlit run app/app.py
 ```
-Truy cập web tại: **`http://localhost:8501`**
+Open **`http://localhost:8501`** in your browser.
