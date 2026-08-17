@@ -1,15 +1,35 @@
 import os
 import random
-import pandas as pd
 from datetime import datetime, timedelta
+import pandas as pd
 
 
-def generate_zomato_dataset(output_dir="data/raw"):
+def generate_zomato_dataset(output_dir="data/raw", force=False):
     os.makedirs(output_dir, exist_ok=True)
+    orders_file = os.path.join(output_dir, "orders.csv")
+
+    # Check if data already exists and force flag is not set
+    if os.path.exists(orders_file) and not force:
+        print(
+            f"ℹ️ Base dataset already exists in '{output_dir}'. Skipping baseline dataset generation."
+        )
+        print(
+            "   (Tip: Use force=True or run scripts/generate_daily_incremental_data.py for incremental batching)"
+        )
+        return
+
     random.seed(42)
 
     # 1. Restaurants
-    cities = ["Mumbai", "Delhi", "Bengaluru", "Hyderabad", "Pune", "Chennai", "Kolkata"]
+    cities = [
+        "Mumbai",
+        "Delhi",
+        "Bengaluru",
+        "Hyderabad",
+        "Pune",
+        "Chennai",
+        "Kolkata",
+    ]
     cuisines = [
         "North Indian",
         "South Indian",
@@ -190,7 +210,9 @@ def generate_zomato_dataset(output_dir="data/raw"):
             continue
 
         order_dt = start_date + timedelta(
-            days=random.randint(0, 180), hours=random.randint(10, 22), minutes=random.randint(0, 59)
+            days=random.randint(0, 180),
+            hours=random.randint(10, 22),
+            minutes=random.randint(0, 59),
         )
         status = random.choice(statuses)
 
@@ -241,7 +263,7 @@ def generate_zomato_dataset(output_dir="data/raw"):
     # 7. Reviews (Free-text feedback for AI LLM enrichment & RAG)
     positive_reviews = [
         "Food was piping hot and super fresh! Excellent delivery speed.",
-        "The Biryani flavor was authentic and delicious. Packaging was clean and leak-proof.",
+        ("The Biryani flavor was authentic and delicious. Packaging was" " clean and leak-proof."),
         "Amazing taste and great portion sizes! Will definitely order again.",
         "Best butter chicken in town! Delivered 10 minutes early.",
         "Very crisp crust pizza, fresh toppings. Highly recommended!",
@@ -257,7 +279,7 @@ def generate_zomato_dataset(output_dir="data/raw"):
         "Very oily curry and completely missing garlic naan from my order!",
         "Extremely disappointing packaging. Everything was spilled everywhere.",
         "Food tasted stale and smelled bad. Never ordering from here again.",
-        "Rude delivery agent and delayed by 40 minutes with no tracking updates.",
+        ("Rude delivery agent and delayed by 40 minutes with no tracking" " updates."),
     ]
 
     reviews = []
