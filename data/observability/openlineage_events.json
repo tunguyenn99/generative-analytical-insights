@@ -1,0 +1,52 @@
+{
+  "eventType": "COMPLETE",
+  "eventTime": "2026-08-18T02:14:54.489649Z",
+  "producer": "https://github.com/tunguyenn99/generative-analytical-insights",
+  "schemaURL": "https://openlineage.io/spec/1-0-5/OpenLineage.json#/$defs/RunEvent",
+  "job": {
+    "namespace": "zomato_data_engineering",
+    "name": "zomato_medallion_pipeline_observability"
+  },
+  "inputs": [
+    {
+      "namespace": "s3://zomato-data-lake",
+      "name": "raw/orders",
+      "facets": {
+        "schema": {
+          "fields": [
+            {
+              "name": "order_id",
+              "type": "INTEGER"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "namespace": "s3://zomato-data-lake",
+      "name": "raw/reviews",
+      "facets": {
+        "schema": {
+          "fields": [
+            {
+              "name": "review_id",
+              "type": "INTEGER"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "namespace": "duckdb://data/warehouse/zomato_dw.duckdb",
+      "name": "MARTS.mart_daily_revenue",
+      "facets": {
+        "dataQualityMetrics": {
+          "freshnessHoursLag": 18700.0,
+          "anomaliesDetectedCount": 19
+        }
+      }
+    }
+  ]
+}

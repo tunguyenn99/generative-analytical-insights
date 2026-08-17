@@ -28,9 +28,7 @@ def verify_dbt_semantic_layer():
         m_type = metric.get("type")
         print(f"       ├─ 📊 {name} ({m_type}): {desc}")
 
-    print(
-        "✅ dbt MetricFlow Semantic Layer compiled and validated successfully!"
-    )
+    print("✅ dbt MetricFlow Semantic Layer compiled and validated successfully!")
 
 
 if __name__ == "__main__":

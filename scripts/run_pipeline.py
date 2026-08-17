@@ -1,14 +1,15 @@
 import os
+import subprocess
 import sys
 
 # Ensure root directory is in sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-import subprocess
+from ai.enrich_reviews import enrich_reviews_pipeline
 from generate_sample_data import generate_zomato_dataset
+from scripts.data_observability import run_data_observability_audit
 from scripts.init_localstack_s3 import upload_raw_data_to_s3
 from scripts.load_raw_duckdb import load_raw_tables
-from ai.enrich_reviews import enrich_reviews_pipeline
 
 
 def run_full_pipeline():
@@ -43,6 +44,11 @@ def run_full_pipeline():
     # Step 5: LLM Review Enrichment
     print("5️⃣ STEP 5: Executing AI Layer - LLM Review Enrichment...")
     enrich_reviews_pipeline()
+    print()
+
+    # Step 6: Data Observability & OpenLineage Audit
+    print("6️⃣ STEP 6: Executing Data Observability & OpenLineage Audit...")
+    run_data_observability_audit()
     print()
 
     print("=========================================================================")

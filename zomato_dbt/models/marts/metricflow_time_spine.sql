@@ -10,6 +10,5 @@ WITH days AS (
     FROM range(0, 730) AS t(i)
 )
 
-SELECT
-    date_day
+SELECT date_day
 FROM days
