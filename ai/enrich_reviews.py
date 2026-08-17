@@ -15,10 +15,12 @@ def enrich_reviews_pipeline():
     con.execute("CREATE SCHEMA IF NOT EXISTS ZOMATO_AI;")
 
     # Fetch reviews
-    reviews_df = con.execute("""
-        SELECT review_id, order_id, user_id, restaurant_id, review_text, star_rating, review_date 
+    reviews_df = con.execute(
+        """
+        SELECT review_id, order_id, user_id, restaurant_id, review_text, star_rating, review_date
         FROM STAGING.stg_reviews;
-    """).fetchdf()
+    """
+    ).fetchdf()
 
     if reviews_df.empty:
         print("⚠️ No reviews found in ZOMATO_STAGING.stg_reviews!")
@@ -62,7 +64,8 @@ def enrich_reviews_pipeline():
 
     # Register temp table and create ZOMATO_AI.REVIEW_ENRICHED
     con.execute("DROP TABLE IF EXISTS ZOMATO_AI.REVIEW_ENRICHED;")
-    con.execute("""
+    con.execute(
+        """
         CREATE TABLE ZOMATO_AI.REVIEW_ENRICHED (
             review_id INT,
             order_id INT,
@@ -74,11 +77,12 @@ def enrich_reviews_pipeline():
             llm_aspect VARCHAR,
             review_date TIMESTAMP
         );
-    """)
+    """
+    )
 
     con.executemany(
         """
-        INSERT INTO ZOMATO_AI.REVIEW_ENRICHED 
+        INSERT INTO ZOMATO_AI.REVIEW_ENRICHED
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
     """,
         enriched_records,

@@ -142,14 +142,16 @@ st.subheader("📌 System Architecture & Pipeline Status")
 col_a, col_b = st.columns([1.5, 1])
 
 with col_a:
-    st.markdown("""
+    st.markdown(
+        """
     #### 🏗️ Modular Architecture Components:
     1. **Data Ingestion (Local S3)**: Synthetic Zomato dataset generator uploaded to **AWS LocalStack S3** (`s3://zomato-data-lake/raw/`).
     2. **Medallion Data Warehouse**: **DuckDB** staging & gold schemas (`ZOMATO_RAW` → `STAGING` → `MARTS`).
     3. **dbt Transformation**: Modular SQL models with 35+ data quality tests (`dbt build`).
     4. **AI Enrichment**: **LLM sentiment & topic extraction** into `ZOMATO_AI.REVIEW_ENRICHED`.
     5. **Generative UI**: **RAG Review Explorer** & **Text-to-SQL Studio**.
-    """)
+    """
+    )
 
 with col_b:
     st.markdown("#### ⚡ Pipeline Execution Status")

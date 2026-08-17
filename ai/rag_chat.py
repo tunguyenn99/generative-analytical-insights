@@ -24,8 +24,9 @@ class ReviewRAGSystem:
 
         con = duckdb.connect(self.db_path)
         try:
-            df = con.execute("""
-                SELECT 
+            df = con.execute(
+                """
+                SELECT
                     e.review_id,
                     r.name AS restaurant_name,
                     r.city,
@@ -35,11 +36,13 @@ class ReviewRAGSystem:
                     e.llm_aspect
                 FROM ZOMATO_AI.REVIEW_ENRICHED e
                 JOIN MARTS.dim_restaurants r ON e.restaurant_id = r.restaurant_id
-            """).fetchdf()
+            """
+            ).fetchdf()
         except Exception:
             # Fallback to STAGING.stg_reviews if ZOMATO_AI isn't built yet
-            df = con.execute("""
-                SELECT 
+            df = con.execute(
+                """
+                SELECT
                     e.review_id,
                     r.name AS restaurant_name,
                     r.city,
@@ -49,7 +52,8 @@ class ReviewRAGSystem:
                     'General' AS llm_aspect
                 FROM STAGING.stg_reviews e
                 JOIN MARTS.dim_restaurants r ON e.restaurant_id = r.restaurant_id
-            """).fetchdf()
+            """
+            ).fetchdf()
         finally:
             con.close()
 

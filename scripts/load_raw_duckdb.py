@@ -18,10 +18,12 @@ def load_raw_tables():
     for table in tables:
         csv_path = os.path.join(DATA_DIR, f"{table}.csv")
         if os.path.exists(csv_path):
-            con.execute(f"""
-                CREATE OR REPLACE TABLE ZOMATO_RAW.{table} AS 
+            con.execute(
+                f"""
+                CREATE OR REPLACE TABLE ZOMATO_RAW.{table} AS
                 SELECT * FROM read_csv_auto('{csv_path}', header=True);
-            """)
+            """
+            )
             count = con.execute(f"SELECT COUNT(*) FROM ZOMATO_RAW.{table};").fetchone()[0]
             print(f"  ├─ ZOMATO_RAW.{table}: {count} rows loaded")
         else:
