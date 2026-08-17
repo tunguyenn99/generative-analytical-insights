@@ -1,0 +1,39 @@
+name: Daily Incremental Data Pipeline
+
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  daily-incremental-ingestion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate Daily Incremental Random Data
+        run: |
+          python scripts/generate_daily_incremental_data.py
+
+      - name: Load Raw Incremental Data to DuckDB
+        run: |
+          python scripts/load_raw_duckdb.py
+
+      - name: Execute dbt Medallion Transformations & Tests
+        run: |
+          cd zomato_dbt
+          dbt build
