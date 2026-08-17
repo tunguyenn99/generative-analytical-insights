@@ -4,7 +4,7 @@
 
 # 🤖 Generative AI Layer (`ai/`)
 
-The `ai/` directory houses the Generative AI engine and intelligence modules for the Zomato AI & Data Engineering platform. Powered by **Google Gemini API (`gemini-3.5-flash`)**, this layer enriches unstructured review data, provides RAG retrieval, and generates read-only SQL queries from natural language.
+The `ai/` directory houses the Generative AI engine and intelligence modules for the Zomato AI & Data Engineering platform. Powered by **Google Gemini API (`gemini-3.5-flash`)**, this layer enriches unstructured review data, provides RAG retrieval, generates read-only SQL queries via dbt Semantic Layer, and synthesizes executive anomaly narratives.
 
 ---
 
@@ -16,7 +16,8 @@ ai/
  ├── llm_client.py         # Multi-provider LLM connector (Gemini -> OpenAI -> Local Fallback)
  ├── enrich_reviews.py     # Batch review sentiment & aspect extraction pipeline
  ├── rag_chat.py           # Vector RAG search engine over customer reviews
- └── text_to_sql.py        # Text-to-SQL engine with schema context & security guard
+ ├── text_to_sql.py        # Text-to-SQL engine with dbt Semantic Layer metrics & SQL Guard
+ └── anomaly_insights.py   # AI Executive Anomaly Narrative & Root-Cause Analysis
 ```
 
 ---
@@ -38,7 +39,12 @@ ai/
 
 ### 4. `text_to_sql.py` - Natural Language Text-to-SQL Studio
 - Translates plain English or Vietnamese questions into DuckDB SQL queries against the Gold `MARTS` schema.
+- **dbt Semantic Layer Context**: Integrates dbt MetricFlow metric definitions (`gmv_metric`, `order_volume_metric`, `cancellation_rate_metric`).
 - **Security Guard**: Enforces strict read-only execution (blocking `DROP`, `DELETE`, `UPDATE`, `INSERT`).
+
+### 5. `anomaly_insights.py` - AI Anomaly Narrative Analysis
+- Reads statistical metric outliers (|z-score| > 2.0) detected by `scripts/data_observability.py`.
+- Synthesizes executive anomaly root-cause reports in English and Vietnamese.
 
 ---
 
@@ -49,7 +55,7 @@ Run RAG chat directly from terminal:
 python3 -m ai.rag_chat
 ```
 
-Run review sentiment enrichment manually:
+Run AI Anomaly Narrative Analysis:
 ```bash
-python3 ai/enrich_reviews.py
+python3 ai/anomaly_insights.py
 ```

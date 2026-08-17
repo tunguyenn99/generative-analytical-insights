@@ -19,7 +19,7 @@ def run_data_observability_audit():
     # 1. Check Data Freshness
     freshness_df = con.execute(
         """
-        SELECT 
+        SELECT
             MAX(order_timestamp) AS latest_order_time,
             ROUND(DATEDIFF('hour', MAX(order_timestamp), CURRENT_TIMESTAMP), 1) AS hours_since_last_order
         FROM STAGING.stg_orders;
@@ -28,22 +28,20 @@ def run_data_observability_audit():
 
     latest_time = str(freshness_df["latest_order_time"].iloc[0])
     hours_lag = float(freshness_df["hours_since_last_order"].iloc[0])
-    print(
-        f"  ├─ 🕒 Data Freshness Check: Latest order at '{latest_time}' ({hours_lag} hours ago)"
-    )
+    print(f"  ├─ 🕒 Data Freshness Check: Latest order at '{latest_time}' ({hours_lag} hours ago)")
 
     # 2. Z-Score Anomaly Detection on Daily Revenue GMV
     anomaly_df = con.execute(
         """
         WITH stats AS (
-            SELECT 
+            SELECT
                 AVG(gross_merchandise_value_gmv) AS mean_gmv,
                 STDDEV(gross_merchandise_value_gmv) AS std_gmv,
                 AVG(cancellation_rate_pct) AS mean_cancel_rate,
                 STDDEV(cancellation_rate_pct) AS std_cancel_rate
             FROM MARTS.mart_daily_revenue
         )
-        SELECT 
+        SELECT
             r.order_date,
             r.city,
             r.gross_merchandise_value_gmv,
@@ -58,9 +56,7 @@ def run_data_observability_audit():
 
     anomalies = []
     if not anomaly_df.empty:
-        print(
-            f"  ├─ ⚠️ Detected {len(anomaly_df)} Statistical Anomalies (|z-score| > 2.0):"
-        )
+        print(f"  ├─ ⚠️ Detected {len(anomaly_df)} Statistical Anomalies (|z-score| > 2.0):")
         for _, row in anomaly_df.iterrows():
             anomalies.append(
                 {
@@ -76,9 +72,7 @@ def run_data_observability_audit():
                 f"  │    ├─ [{row['order_date']}] {row['city']}: GMV=₹{row['gross_merchandise_value_gmv']} (z={row['gmv_z_score']}), Cancel Rate={row['cancellation_rate_pct']}% (z={row['cancel_z_score']})"
             )
     else:
-        print(
-            "  ├─ ✅ No Statistical Anomalies Detected in Gold Marts (|z-score| <= 2.0)."
-        )
+        print("  ├─ ✅ No Statistical Anomalies Detected in Gold Marts (|z-score| <= 2.0).")
 
     con.close()
 
@@ -96,20 +90,12 @@ def run_data_observability_audit():
             {
                 "namespace": "s3://zomato-data-lake",
                 "name": "raw/orders",
-                "facets": {
-                    "schema": {
-                        "fields": [{"name": "order_id", "type": "INTEGER"}]
-                    }
-                },
+                "facets": {"schema": {"fields": [{"name": "order_id", "type": "INTEGER"}]}},
             },
             {
                 "namespace": "s3://zomato-data-lake",
                 "name": "raw/reviews",
-                "facets": {
-                    "schema": {
-                        "fields": [{"name": "review_id", "type": "INTEGER"}]
-                    }
-                },
+                "facets": {"schema": {"fields": [{"name": "review_id", "type": "INTEGER"}]}},
             },
         ],
         "outputs": [

@@ -45,10 +45,16 @@ Available Data Warehouse Tables & Views in DuckDB (Zomato Project):
 
 6. MARTS.fct_orders:
    - order_id (INT), user_id (INT), restaurant_id (INT), order_timestamp (TIMESTAMP), delivery_timestamp (TIMESTAMP), order_status (VARCHAR: 'DELIVERED', 'CANCELLED'), is_delivered (BOOLEAN), total_amount (DOUBLE), delivery_duration_mins (INT)
+
+dbt Semantic Layer Metrics Definitions (MetricFlow Standard):
+- gmv_metric: SUM(gross_merchandise_value_gmv) on MARTS.mart_daily_revenue
+- order_volume_metric: SUM(total_orders) on MARTS.mart_daily_revenue
+- cancellation_rate_metric: AVG(cancellation_rate_pct) on MARTS.mart_daily_revenue
 """
 
 
 class TextToSQLEngine:
+
     def __init__(self, db_path=DB_PATH):
         self.db_path = db_path
         self.llm = LLMClient()
@@ -57,9 +63,10 @@ class TextToSQLEngine:
         system_prompt = (
             "You are an expert SQL Generator for DuckDB Data Warehouse. "
             "Convert the user's natural language question into a clean, valid DuckDB SQL query. "
+            "Leverage the dbt Semantic Layer Metrics definitions when available. "
             "Return ONLY the executable SQL query string inside ```sql ... ``` block or as plain SQL text. "
             "IMPORTANT: Use SELECT statements ONLY. Do not attempt to modify, drop, or alter database tables."
-            f"\n\nDatabase Schema Documentation:\n{SCHEMA_DOCUMENTATION}"
+            f"\n\nDatabase Schema Documentation & Semantic Metrics:\n{SCHEMA_DOCUMENTATION}"
         )
         user_prompt = f"Question: {natural_language_query}"
 
@@ -81,7 +88,15 @@ class TextToSQLEngine:
         sql_clean = sql_query.upper().strip()
         if not sql_clean.startswith("SELECT") and not sql_clean.startswith("WITH"):
             return False
-        forbidden_keywords = ["DROP", "DELETE", "UPDATE", "INSERT", "ALTER", "TRUNCATE", "CREATE"]
+        forbidden_keywords = [
+            "DROP",
+            "DELETE",
+            "UPDATE",
+            "INSERT",
+            "ALTER",
+            "TRUNCATE",
+            "CREATE",
+        ]
         for kw in forbidden_keywords:
             if re.search(rf"\b{kw}\b", sql_clean):
                 return False
@@ -102,9 +117,19 @@ class TextToSQLEngine:
             con = duckdb.connect(self.db_path)
             df = con.execute(sql_query).fetchdf()
             con.close()
-            return {"success": True, "error": None, "sql": sql_query, "data": df}
+            return {
+                "success": True,
+                "error": None,
+                "sql": sql_query,
+                "data": df,
+            }
         except Exception as e:
-            return {"success": False, "error": str(e), "sql": sql_query, "data": None}
+            return {
+                "success": False,
+                "error": str(e),
+                "sql": sql_query,
+                "data": None,
+            }
 
 
 if __name__ == "__main__":
