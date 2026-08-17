@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  localstack:
+    container_name: zomato_localstack
+    image: localstack/localstack:3.0.0
+    ports:
+      - "4566:4566"            # LocalStack Web Gateway & S3 Endpoint
+      - "4510-4559:4510-4559"  # External services port range
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - DEBUG=1
+    volumes:
+      - "./aws/localstack_init.sh:/etc/localstack/init/ready.d/init_s3.sh"
+      - "./data/raw:/data/raw"
