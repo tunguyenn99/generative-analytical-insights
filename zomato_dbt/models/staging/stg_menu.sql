@@ -1,5 +1,5 @@
 WITH source AS (
-    SELECT * FROM ZOMATO_RAW.menu
+    SELECT * FROM zomato_raw.menu
 ),
 
 renamed AS (

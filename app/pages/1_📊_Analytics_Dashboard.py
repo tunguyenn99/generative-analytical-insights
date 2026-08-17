@@ -34,13 +34,13 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("📈 Gross Merchandise Value (GMV) Trend")
     fig_gmv = px.line(
-        df_rev, 
-        x="order_date", 
-        y="gross_merchandise_value_gmv", 
+        df_rev,
+        x="order_date",
+        y="gross_merchandise_value_gmv",
         color="city" if selected_city == "All Cities" else None,
         title="Daily GMV (₹) Over Time",
         labels={"gross_merchandise_value_gmv": "GMV (₹)", "order_date": "Order Date"},
-        template="plotly_dark"
+        template="plotly_dark",
     )
     st.plotly_chart(fig_gmv, use_container_width=True)
 
@@ -54,7 +54,7 @@ with col2:
         color_continuous_scale="Reds",
         title="Average Cancellation Rate by City",
         labels={"cancellation_rate_pct": "Cancellation Rate (%)", "city": "City"},
-        template="plotly_dark"
+        template="plotly_dark",
     )
     st.plotly_chart(fig_cancel, use_container_width=True)
 
@@ -68,7 +68,7 @@ with col3:
     if selected_city != "All Cities":
         query_rest += f" WHERE city = '{selected_city}'"
     query_rest += " ORDER BY total_gmv DESC LIMIT 10;"
-    
+
     df_rest = con.execute(query_rest).fetchdf()
     fig_rest = px.bar(
         df_rest,
@@ -79,9 +79,9 @@ with col3:
         color_continuous_scale="Viridis",
         title="Top 10 Restaurants by GMV & Star Rating",
         labels={"total_gmv": "Total GMV (₹)", "name": "Restaurant"},
-        template="plotly_dark"
+        template="plotly_dark",
     )
-    fig_rest.update_layout(yaxis={'categoryorder':'total ascending'})
+    fig_rest.update_layout(yaxis={"categoryorder": "total ascending"})
     st.plotly_chart(fig_rest, use_container_width=True)
 
 with col4:
@@ -90,7 +90,7 @@ with col4:
     if selected_city != "All Cities":
         query_sla += f" WHERE city = '{selected_city}'"
     query_sla += " ORDER BY order_hour ASC;"
-    
+
     df_sla = con.execute(query_sla).fetchdf()
     fig_sla = px.line(
         df_sla,
@@ -98,7 +98,7 @@ with col4:
         y=["p50_delivery_mins", "p90_delivery_mins"],
         title="Delivery Lead Time (Minutes) by Hour of Day",
         labels={"value": "Delivery Duration (Mins)", "order_hour": "Hour of Day (0-23)"},
-        template="plotly_dark"
+        template="plotly_dark",
     )
     st.plotly_chart(fig_sla, use_container_width=True)
 

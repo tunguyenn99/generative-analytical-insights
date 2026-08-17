@@ -1,6 +1,7 @@
 WITH stg_r AS (
     SELECT * FROM {{ ref('stg_restaurants') }}
 ),
+
 ord_stats AS (
     SELECT
         restaurant_id,
@@ -20,5 +21,5 @@ SELECT
     r.cuisine,
     COALESCE(o.total_orders, 0) AS total_orders,
     COALESCE(o.total_gmv, 0.0) AS total_gmv
-FROM stg_r r
-LEFT JOIN ord_stats o ON r.restaurant_id = o.restaurant_id
+FROM stg_r AS r
+LEFT JOIN ord_stats AS o ON r.restaurant_id = o.restaurant_id

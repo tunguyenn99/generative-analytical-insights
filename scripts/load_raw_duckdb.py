@@ -4,6 +4,7 @@ import duckdb
 DB_PATH = "data/warehouse/zomato_dw.duckdb"
 DATA_DIR = "data/raw"
 
+
 def load_raw_tables():
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     con = duckdb.connect(DB_PATH)
@@ -28,6 +29,7 @@ def load_raw_tables():
 
     con.close()
     print("✅ RAW Bronze layer loaded successfully in DuckDB!")
+
 
 if __name__ == "__main__":
     load_raw_tables()

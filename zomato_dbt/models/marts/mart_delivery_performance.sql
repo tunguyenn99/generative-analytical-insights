@@ -1,11 +1,11 @@
 WITH delivery_data AS (
-    SELECT 
+    SELECT
         o.order_id,
         r.city,
         o.order_hour,
         o.delivery_duration_mins
-    FROM {{ ref('fct_orders') }} o
-    JOIN {{ ref('dim_restaurants') }} r ON o.restaurant_id = r.restaurant_id
+    FROM {{ ref('fct_orders') }} AS o
+    INNER JOIN {{ ref('dim_restaurants') }} AS r ON o.restaurant_id = r.restaurant_id
     WHERE o.is_delivered AND o.delivery_duration_mins IS NOT NULL
 )
 

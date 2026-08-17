@@ -1,6 +1,7 @@
 WITH stg_u AS (
     SELECT * FROM {{ ref('stg_users') }}
 ),
+
 user_orders AS (
     SELECT
         user_id,
@@ -21,5 +22,5 @@ SELECT
     u.signup_date,
     COALESCE(o.total_orders_placed, 0) AS total_orders_placed,
     COALESCE(o.total_spent, 0.0) AS total_spent
-FROM stg_u u
-LEFT JOIN user_orders o ON u.user_id = o.user_id
+FROM stg_u AS u
+LEFT JOIN user_orders AS o ON u.user_id = o.user_id

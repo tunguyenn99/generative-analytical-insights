@@ -6,13 +6,14 @@ from botocore.exceptions import EndpointConnectionError, ClientError
 LOCALSTACK_ENDPOINT = os.getenv("LOCALSTACK_ENDPOINT", "http://localhost:4566")
 BUCKET_NAME = "zomato-data-lake"
 
+
 def upload_raw_data_to_s3(data_dir="data/raw"):
     s3_client = boto3.client(
         "s3",
         endpoint_url=LOCALSTACK_ENDPOINT,
         aws_access_key_id="test",
         aws_secret_access_key="test",
-        region_name="us-east-1"
+        region_name="us-east-1",
     )
 
     try:
@@ -39,6 +40,7 @@ def upload_raw_data_to_s3(data_dir="data/raw"):
         print(f"⚠️ Notice: LocalStack S3 endpoint at {LOCALSTACK_ENDPOINT} is currently offline.")
         print(f"   Using Direct Local File Landing Zone ('{data_dir}') for DuckDB & dbt pipelines.")
         return False
+
 
 if __name__ == "__main__":
     upload_raw_data_to_s3()

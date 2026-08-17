@@ -1,6 +1,7 @@
 import os
 from PIL import Image, ImageDraw, ImageFont
 
+
 def draw_terminal_window(title: str, lines: list, output_filename: str):
     font_size = 14
     line_height = 20
@@ -60,6 +61,7 @@ def draw_terminal_window(title: str, lines: list, output_filename: str):
     img.save(output_filename)
     print(f"Rendered live terminal screenshot to {output_filename}")
 
+
 # 1. Pipeline Run Live Terminal Logs
 lines_pipeline = [
     "$ python3 scripts/run_pipeline.py",
@@ -93,7 +95,7 @@ lines_pipeline = [
     "✨ LLMClient initialized with Google Gemini API (Model: gemini-3.5-flash).",
     "✅ LLM Enrichment Complete! Created 'ZOMATO_AI.REVIEW_ENRICHED' with 250 rows.",
     "=========================================================================",
-    "🎉 END-TO-END PIPELINE COMPLETED SUCCESSFULLY!"
+    "🎉 END-TO-END PIPELINE COMPLETED SUCCESSFULLY!",
 ]
 
 # 2. dbt Test Live Terminal Logs
@@ -118,7 +120,7 @@ lines_dbt = [
     "18:33:31  ",
     "18:33:31  Finished running 19 data tests in 0 hours 0 minutes and 0.99 seconds.",
     "18:33:31  Completed successfully",
-    "18:33:31  Done. PASS=35 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=35"
+    "18:33:31  Done. PASS=35 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=35",
 ]
 
 # 3. LocalStack S3 Live Terminal Logs
@@ -137,7 +139,7 @@ lines_s3 = [
     "  └─ Uploaded reviews.csv     ➔ s3://zomato-data-lake/raw/reviews/reviews.csv",
     "  └─ Uploaded users.csv       ➔ s3://zomato-data-lake/raw/users/users.csv",
     "",
-    "✅ All raw datasets successfully landed in AWS LocalStack S3!"
+    "✅ All raw datasets successfully landed in AWS LocalStack S3!",
 ]
 
 # 4. RAG Chat Live Terminal Logs
@@ -155,10 +157,16 @@ lines_rag = [
     "   * Delayed Delivery: Customers reported that delivery took over an hour.",
     "   * Food Quality: Customers consistently reported receiving cold food.",
     "",
-    "📚 Sources retrieved: 4 reviews (Chai Point, Sagar Ratna, Mainland China, Royal Biryani)"
+    "📚 Sources retrieved: 4 reviews (Chai Point, Sagar Ratna, Mainland China, Royal Biryani)",
 ]
 
-draw_terminal_window("Terminal - python3 scripts/run_pipeline.py", lines_pipeline, "images/terminal_pipeline_run.png")
+draw_terminal_window(
+    "Terminal - python3 scripts/run_pipeline.py", lines_pipeline, "images/terminal_pipeline_run.png"
+)
 draw_terminal_window("Terminal - dbt test (35 Passed)", lines_dbt, "images/terminal_dbt_test.png")
-draw_terminal_window("Terminal - AWS LocalStack S3 Docker Ingestion", lines_s3, "images/terminal_s3_localstack.png")
-draw_terminal_window("Terminal - Google Gemini RAG Search Engine", lines_rag, "images/terminal_rag_chat.png")
+draw_terminal_window(
+    "Terminal - AWS LocalStack S3 Docker Ingestion", lines_s3, "images/terminal_s3_localstack.png"
+)
+draw_terminal_window(
+    "Terminal - Google Gemini RAG Search Engine", lines_rag, "images/terminal_rag_chat.png"
+)

@@ -47,6 +47,7 @@ Available Data Warehouse Tables & Views in DuckDB (Zomato Project):
    - order_id (INT), user_id (INT), restaurant_id (INT), order_timestamp (TIMESTAMP), delivery_timestamp (TIMESTAMP), order_status (VARCHAR: 'DELIVERED', 'CANCELLED'), is_delivered (BOOLEAN), total_amount (DOUBLE), delivery_duration_mins (INT)
 """
 
+
 class TextToSQLEngine:
     def __init__(self, db_path=DB_PATH):
         self.db_path = db_path
@@ -61,9 +62,9 @@ class TextToSQLEngine:
             f"\n\nDatabase Schema Documentation:\n{SCHEMA_DOCUMENTATION}"
         )
         user_prompt = f"Question: {natural_language_query}"
-        
+
         raw_response = self.llm.generate_completion(system_prompt, user_prompt)
-        
+
         # Clean markdown code blocks if present
         sql_match = re.search(r"```sql\s*(.*?)\s*```", raw_response, re.DOTALL)
         if sql_match:
@@ -88,32 +89,23 @@ class TextToSQLEngine:
 
     def execute_query(self, natural_language_query: str):
         sql_query = self.generate_sql(natural_language_query)
-        
+
         if not self.validate_sql(sql_query):
             return {
                 "success": False,
                 "error": "Query rejected by Security Guard. Only SELECT read queries are permitted.",
                 "sql": sql_query,
-                "data": None
+                "data": None,
             }
 
         try:
             con = duckdb.connect(self.db_path)
             df = con.execute(sql_query).fetchdf()
             con.close()
-            return {
-                "success": True,
-                "error": None,
-                "sql": sql_query,
-                "data": df
-            }
+            return {"success": True, "error": None, "sql": sql_query, "data": df}
         except Exception as e:
-            return {
-                "success": False,
-                "error": str(e),
-                "sql": sql_query,
-                "data": None
-            }
+            return {"success": False, "error": str(e), "sql": sql_query, "data": None}
+
 
 if __name__ == "__main__":
     engine = TextToSQLEngine()

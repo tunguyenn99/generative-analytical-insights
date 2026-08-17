@@ -10,6 +10,7 @@ from scripts.init_localstack_s3 import upload_raw_data_to_s3
 from scripts.load_raw_duckdb import load_raw_tables
 from ai.enrich_reviews import enrich_reviews_pipeline
 
+
 def run_full_pipeline():
     print("=========================================================================")
     print("🚀 STARTING END-TO-END ZOMATO DATA & AI PIPELINE (LOCAL STACK)")
@@ -50,6 +51,7 @@ def run_full_pipeline():
     print("💡 Next Step: Launch the Streamlit Web Application:")
     print("   streamlit run app/app.py")
     print("=========================================================================\n")
+
 
 if __name__ == "__main__":
     run_full_pipeline()

@@ -7,6 +7,7 @@ from ai.llm_client import LLMClient
 
 DB_PATH = "data/warehouse/zomato_dw.duckdb"
 
+
 class ReviewRAGSystem:
     def __init__(self, db_path=DB_PATH):
         self.db_path = db_path
@@ -57,7 +58,10 @@ class ReviewRAGSystem:
             return
 
         self.reviews_data = df.to_dict(orient="records")
-        corpus = [f"{r['restaurant_name']} ({r['city']}): {r['review_text']} [Aspect: {r['llm_aspect']}]" for r in self.reviews_data]
+        corpus = [
+            f"{r['restaurant_name']} ({r['city']}): {r['review_text']} [Aspect: {r['llm_aspect']}]"
+            for r in self.reviews_data
+        ]
         self.tfidf_matrix = self.vectorizer.fit_transform(corpus)
         print(f"🔍 Indexed {len(self.reviews_data)} customer reviews for RAG vector search.")
 
@@ -80,11 +84,11 @@ class ReviewRAGSystem:
 
     def answer_query(self, user_question: str, top_k: int = 4):
         retrieved_reviews = self.search_similar_reviews(user_question, top_k=top_k)
-        
+
         if not retrieved_reviews:
             return {
                 "answer": "No relevant reviews found in the dataset to answer your query.",
-                "sources": []
+                "sources": [],
             }
 
         context_blocks = []
@@ -100,17 +104,19 @@ class ReviewRAGSystem:
             "Answer the user's question strictly based on the provided retrieved customer reviews. "
             "Cite specific restaurants, ratings, and quotes when appropriate."
         )
-        user_prompt = f"Retrieved Customer Reviews Context:\n{context_str}\n\nUser Question: {user_question}"
+        user_prompt = (
+            f"Retrieved Customer Reviews Context:\n{context_str}\n\nUser Question: {user_question}"
+        )
 
         llm_response = self.llm.generate_completion(system_prompt, user_prompt)
-        
-        return {
-            "answer": llm_response,
-            "sources": retrieved_reviews
-        }
+
+        return {"answer": llm_response, "sources": retrieved_reviews}
+
 
 if __name__ == "__main__":
     rag = ReviewRAGSystem()
-    result = rag.answer_query("What are the main complaints regarding delivery speed and cold food?")
+    result = rag.answer_query(
+        "What are the main complaints regarding delivery speed and cold food?"
+    )
     print("\n💬 RAG Answer:\n", result["answer"])
     print("\n📚 Sources retrieved:", len(result["sources"]))

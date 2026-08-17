@@ -1,13 +1,13 @@
 WITH reviews AS (
-    SELECT 
+    SELECT
         rev.review_id,
         rev.restaurant_id,
         r.name AS restaurant_name,
         r.city,
         rev.star_rating,
         rev.review_text
-    FROM {{ ref('stg_reviews') }} rev
-    JOIN {{ ref('stg_restaurants') }} r ON rev.restaurant_id = r.restaurant_id
+    FROM {{ ref('stg_reviews') }} AS rev
+    INNER JOIN {{ ref('stg_restaurants') }} AS r ON rev.restaurant_id = r.restaurant_id
 )
 
 SELECT

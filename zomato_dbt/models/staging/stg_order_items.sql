@@ -1,5 +1,5 @@
 WITH source AS (
-    SELECT * FROM ZOMATO_RAW.order_items
+    SELECT * FROM zomato_raw.order_items
 ),
 
 renamed AS (
