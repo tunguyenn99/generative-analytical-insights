@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: dim_restaurants
+    columns:
+      - name: restaurant_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_users
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_orders
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+
+  - name: mart_daily_revenue
+    columns:
+      - name: order_date
+        tests:
+          - not_null
+      - name: city
+        tests:
+          - not_null
+
+  - name: mart_delivery_performance
+    columns:
+      - name: city
+        tests:
+          - not_null

@@ -1,0 +1,7 @@
+zomato_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../data/warehouse/zomato_dw.duckdb"
+      threads: 4

@@ -1,0 +1,48 @@
+version: 2
+
+sources:
+  - name: ZOMATO_RAW
+    tables:
+      - name: restaurants
+      - name: users
+      - name: food
+      - name: menu
+      - name: orders
+      - name: order_items
+      - name: reviews
+
+models:
+  - name: stg_restaurants
+    columns:
+      - name: restaurant_id
+        tests:
+          - unique
+          - not_null
+      - name: city
+        tests:
+          - not_null
+
+  - name: stg_users
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_orders
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: order_status
+        tests:
+          - accepted_values:
+              values: ['DELIVERED', 'CANCELLED']
+
+  - name: stg_reviews
+    columns:
+      - name: review_id
+        tests:
+          - unique
+          - not_null
