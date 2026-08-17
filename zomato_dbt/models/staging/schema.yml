@@ -114,7 +114,8 @@ models:
         description: "Order status (DELIVERED or CANCELLED)."
         tests:
           - accepted_values:
-              values: ['DELIVERED', 'CANCELLED']
+              arguments:
+                values: ['DELIVERED', 'CANCELLED']
       - name: is_delivered
         description: "Boolean flag indicating if the order was successfully delivered."
       - name: total_amount
