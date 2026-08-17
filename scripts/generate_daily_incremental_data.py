@@ -37,9 +37,7 @@ def generate_daily_incremental_data(num_new_orders=30, num_new_users=3):
     max_review_id = int(df_reviews["review_id"].max()) if not df_reviews.empty else 0
     max_user_id = int(df_users["user_id"].max()) if not df_users.empty else 0
 
-    print(
-        f"📅 Generating incremental daily batch data for {today.strftime('%Y-%m-%d')}..."
-    )
+    print(f"📅 Generating incremental daily batch data for {today.strftime('%Y-%m-%d')}...")
 
     # 1. Generate New Daily Users
     first_names = ["Aarav", "Ananya", "Rohan", "Priya", "Rahul", "Neha", "Vikram", "Sneha"]
@@ -136,9 +134,7 @@ def generate_daily_incremental_data(num_new_orders=30, num_new_users=3):
     df_order_items_updated = pd.concat([df_order_items, df_new_items], ignore_index=True)
     df_order_items_updated.to_csv(order_items_file, index=False)
 
-    print(
-        f"  ├─ Appended {len(new_orders)} new orders & {len(new_order_items)} order items."
-    )
+    print(f"  ├─ Appended {len(new_orders)} new orders & {len(new_order_items)} order items.")
 
     # 3. Generate New Daily Customer Reviews
     positive_reviews = [

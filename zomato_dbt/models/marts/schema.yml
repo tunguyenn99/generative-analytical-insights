@@ -2,37 +2,193 @@ version: 2
 
 models:
   - name: dim_restaurants
+    description: "{{ doc('dim_restaurants_doc') }}"
     columns:
       - name: restaurant_id
+        description: "Primary key for the restaurant dimension."
         tests:
           - unique
           - not_null
+      - name: name
+        description: "Cleaned restaurant display name."
+      - name: city
+        description: "Operating city location."
+      - name: rating
+        description: "Current customer rating."
+      - name: votes
+        description: "Total vote count."
+      - name: cost_for_two
+        description: "Estimated cost for two people."
+      - name: cuisine
+        description: "Cuisine type."
+      - name: total_orders
+        description: "Aggregated lifetime orders delivered."
+      - name: total_gmv
+        description: "Aggregated lifetime Gross Merchandise Value generated."
 
   - name: dim_users
+    description: "{{ doc('dim_users_doc') }}"
     columns:
       - name: user_id
+        description: "Primary key for user dimension."
         tests:
           - unique
           - not_null
+      - name: name
+        description: "User full name."
+      - name: email
+        description: "Sanitized email address."
+      - name: age
+        description: "Age in years."
+      - name: gender
+        description: "Gender."
+      - name: city
+        description: "User primary city."
+      - name: signup_date
+        description: "Account registration date."
+      - name: total_orders_placed
+        description: "Total lifetime orders placed."
+      - name: total_spent
+        description: "Total monetary expenditure in INR."
+
+  - name: dim_date
+    description: "{{ doc('dim_date_doc') }}"
+    columns:
+      - name: date_day
+        description: "Primary date key."
+        tests:
+          - unique
+          - not_null
+      - name: year
+        description: "Calendar year (e.g. 2024)."
+      - name: month
+        description: "Calendar month number (1 to 12)."
+      - name: day_of_month
+        description: "Day of the month (1 to 31)."
+      - name: day_of_week
+        description: "Day of the week number."
+      - name: month_name
+        description: "Full month name (e.g. January, August)."
+      - name: day_name
+        description: "Day of the week name (e.g. Monday, Sunday)."
+
+  - name: dim_food
+    description: "{{ doc('dim_food_doc') }}"
+    columns:
+      - name: food_id
+        description: "Primary key for food item dimension."
+        tests:
+          - unique
+          - not_null
+      - name: item_name
+        description: "Dish name."
+      - name: category
+        description: "Menu category."
+      - name: is_veg
+        description: "Vegetarian flag."
 
   - name: fct_orders
+    description: "{{ doc('fct_orders_doc') }}"
     columns:
       - name: order_id
+        description: "Primary key for order transactions."
         tests:
           - unique
           - not_null
+      - name: user_id
+        description: "Foreign key referencing dim_users."
+      - name: restaurant_id
+        description: "Foreign key referencing dim_restaurants."
+      - name: order_timestamp
+        description: "Order creation timestamp."
+      - name: delivery_timestamp
+        description: "Order completion timestamp."
+      - name: order_status
+        description: "Order status (DELIVERED/CANCELLED)."
+      - name: is_delivered
+        description: "Boolean delivery flag."
+      - name: total_amount
+        description: "Monetary total."
+      - name: delivery_duration_mins
+        description: "Delivery time in minutes."
+
+  - name: fct_order_items
+    description: "{{ doc('fct_order_items_doc') }}"
+    columns:
+      - name: order_item_id
+        description: "Primary key for order item line."
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Foreign key referencing fct_orders."
+      - name: food_id
+        description: "Foreign key referencing dim_food."
+      - name: quantity
+        description: "Units ordered."
+      - name: item_price
+        description: "Unit price."
 
   - name: mart_daily_revenue
+    description: "{{ doc('mart_daily_revenue_doc') }}"
     columns:
       - name: order_date
+        description: "Date of transaction."
         tests:
           - not_null
       - name: city
+        description: "City location."
         tests:
           - not_null
+      - name: total_orders
+        description: "Total order count placed."
+      - name: delivered_orders
+        description: "Successful delivery count."
+      - name: cancelled_orders
+        description: "Cancelled order count."
+      - name: gross_merchandise_value_gmv
+        description: "Total revenue GMV."
+      - name: average_order_value_aov
+        description: "Average Order Value (AOV)."
+      - name: cancellation_rate_pct
+        description: "Percentage of orders cancelled."
 
   - name: mart_delivery_performance
+    description: "{{ doc('mart_delivery_performance_doc') }}"
     columns:
       - name: city
+        description: "City location."
         tests:
           - not_null
+      - name: order_hour
+        description: "Hour of day (0 to 23)."
+      - name: total_deliveries
+        description: "Total completed deliveries."
+      - name: avg_delivery_mins
+        description: "Mean delivery duration."
+      - name: p50_delivery_mins
+        description: "Median (P50) delivery duration."
+      - name: p90_delivery_mins
+        description: "P90 SLA delivery duration."
+
+  - name: mart_review_insights
+    description: "{{ doc('mart_review_insights_doc') }}"
+    columns:
+      - name: restaurant_id
+        description: "Foreign key referencing dim_restaurants."
+        tests:
+          - not_null
+      - name: restaurant_name
+        description: "Restaurant display name."
+      - name: city
+        description: "City location."
+      - name: total_reviews
+        description: "Total review count."
+      - name: avg_star_rating
+        description: "Average star rating score."
+      - name: positive_reviews_count
+        description: "Count of positive reviews (4-5 stars)."
+      - name: neutral_reviews_count
+        description: "Count of neutral reviews (3 stars)."
+      - name: negative_reviews_count
+        description: "Count of negative reviews (1-2 stars)."

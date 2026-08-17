@@ -2,47 +2,160 @@ version: 2
 
 sources:
   - name: ZOMATO_RAW
+    description: "Raw ingested data layer from LocalStack S3 into DuckDB Bronze schema"
     tables:
       - name: restaurants
+        description: "Raw partner restaurant listings"
       - name: users
+        description: "Raw customer user registrations"
       - name: food
+        description: "Raw food item catalog"
       - name: menu
+        description: "Raw restaurant menu pricing"
       - name: orders
+        description: "Raw order transactions"
       - name: order_items
+        description: "Raw order line item details"
       - name: reviews
+        description: "Raw customer review text and ratings"
 
 models:
   - name: stg_restaurants
+    description: "Staging model for partner restaurants with cleaned cost strings, standardized city names, and rating numeric casts."
     columns:
       - name: restaurant_id
+        description: "Surrogate key / unique primary key for the restaurant."
         tests:
           - unique
           - not_null
+      - name: name
+        description: "Cleaned restaurant display name."
       - name: city
+        description: "Operating city for the restaurant branch."
         tests:
           - not_null
+      - name: rating
+        description: "Average star rating (1.0 to 5.0)."
+      - name: votes
+        description: "Total number of user votes received."
+      - name: cost_for_two
+        description: "Cleaned numeric cost for two people in INR."
+      - name: cuisine
+        description: "Primary cuisine category offered."
 
   - name: stg_users
+    description: "Staging model for Zomato customers with trimmed emails and sanitized demographics."
     columns:
       - name: user_id
+        description: "Surrogate key / unique primary key for the customer."
         tests:
           - unique
           - not_null
+      - name: name
+        description: "Customer full name."
+      - name: email
+        description: "Lowercased and trimmed customer email address."
+      - name: age
+        description: "Customer age in years."
+      - name: gender
+        description: "Demographic gender classification."
+      - name: city
+        description: "Customer primary home city."
+      - name: signup_date
+        description: "Account creation date."
+
+  - name: stg_food
+    description: "Staging model for food catalog items."
+    columns:
+      - name: food_id
+        description: "Unique food item identifier."
+        tests:
+          - unique
+          - not_null
+      - name: item_name
+        description: "Name of the dish or beverage item."
+      - name: category
+        description: "Food menu category (e.g. Main Course, Biryani, Dessert)."
+      - name: is_veg
+        description: "Boolean flag indicating if the item is vegetarian."
+
+  - name: stg_menu
+    description: "Staging model linking food items to restaurant menus with pricing."
+    columns:
+      - name: menu_id
+        description: "Unique menu entry identifier."
+        tests:
+          - unique
+          - not_null
+      - name: restaurant_id
+        description: "Foreign key referencing stg_restaurants."
+      - name: food_id
+        description: "Foreign key referencing stg_food."
+      - name: price
+        description: "Item unit price in INR."
 
   - name: stg_orders
+    description: "Staging model for food delivery orders with calculated delivery duration in minutes and delivery flags."
     columns:
       - name: order_id
+        description: "Surrogate key / unique primary key for the order."
         tests:
           - unique
           - not_null
+      - name: user_id
+        description: "Foreign key referencing stg_users."
+      - name: restaurant_id
+        description: "Foreign key referencing stg_restaurants."
+      - name: order_timestamp
+        description: "Timestamp when the order was placed."
+      - name: delivery_timestamp
+        description: "Timestamp when the order was delivered (null if cancelled)."
       - name: order_status
+        description: "Order status (DELIVERED or CANCELLED)."
         tests:
           - accepted_values:
               values: ['DELIVERED', 'CANCELLED']
+      - name: is_delivered
+        description: "Boolean flag indicating if the order was successfully delivered."
+      - name: total_amount
+        description: "Total order monetary value in INR."
+      - name: delivery_duration_mins
+        description: "Total time elapsed in minutes between order placement and delivery."
 
-  - name: stg_reviews
+  - name: stg_order_items
+    description: "Staging model for individual line items within an order."
     columns:
-      - name: review_id
+      - name: order_item_id
+        description: "Unique line item identifier."
         tests:
           - unique
           - not_null
+      - name: order_id
+        description: "Foreign key referencing stg_orders."
+      - name: food_id
+        description: "Foreign key referencing stg_food."
+      - name: quantity
+        description: "Quantity of item ordered."
+      - name: item_price
+        description: "Unit price of item ordered."
+
+  - name: stg_reviews
+    description: "Staging model for customer review ratings and text feedback."
+    columns:
+      - name: review_id
+        description: "Unique review identifier."
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Foreign key referencing stg_orders."
+      - name: user_id
+        description: "Foreign key referencing stg_users."
+      - name: restaurant_id
+        description: "Foreign key referencing stg_restaurants."
+      - name: review_text
+        description: "Free-text customer feedback for AI LLM sentiment processing."
+      - name: star_rating
+        description: "Customer rating from 1 to 5 stars."
+      - name: review_date
+        description: "Timestamp of review submission."
