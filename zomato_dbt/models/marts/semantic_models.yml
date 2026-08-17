@@ -1,0 +1,78 @@
+version: 2
+
+semantic_models:
+  - name: metricflow_time_spine
+    model: ref('metricflow_time_spine')
+    defaults:
+      agg_time_dimension: date_day
+    entities:
+      - name: date_spine_id
+        type: primary
+        expr: date_day
+    dimensions:
+      - name: date_day
+        type: time
+        type_params:
+          time_granularity: day
+
+  - name: semantic_daily_revenue
+    model: ref('mart_daily_revenue')
+    description: "Semantic layer model for daily revenue, GMV, and order volumes grouped by city."
+    defaults:
+      agg_time_dimension: order_date
+
+    entities:
+      - name: city_location
+        type: primary
+        expr: city
+
+    measures:
+      - name: gross_merchandise_value
+        description: "Total Gross Merchandise Value (GMV) in INR."
+        expr: gross_merchandise_value_gmv
+        agg: sum
+
+      - name: total_orders_placed
+        description: "Total orders placed."
+        expr: total_orders
+        agg: sum
+
+      - name: total_delivered_orders
+        description: "Total successful delivered orders."
+        expr: delivered_orders
+        agg: sum
+
+      - name: total_cancelled_orders
+        description: "Total cancelled orders."
+        expr: cancelled_orders
+        agg: sum
+
+      - name: avg_cancellation_rate
+        description: "Average daily cancellation rate percentage."
+        expr: cancellation_rate_pct
+        agg: average
+
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+
+metrics:
+  - name: gmv_metric
+    description: "Sum of Gross Merchandise Value across all delivered orders."
+    type: simple
+    type_params:
+      measure: gross_merchandise_value
+
+  - name: order_volume_metric
+    description: "Total volume of food delivery orders."
+    type: simple
+    type_params:
+      measure: total_orders_placed
+
+  - name: cancellation_rate_metric
+    description: "Average city cancellation rate."
+    type: simple
+    type_params:
+      measure: avg_cancellation_rate
