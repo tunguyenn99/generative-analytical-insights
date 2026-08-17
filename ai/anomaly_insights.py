@@ -22,14 +22,14 @@ def generate_anomaly_narrative():
     anomaly_df = con.execute(
         """
         WITH stats AS (
-            SELECT 
+            SELECT
                 AVG(gross_merchandise_value_gmv) AS mean_gmv,
                 STDDEV(gross_merchandise_value_gmv) AS std_gmv,
                 AVG(cancellation_rate_pct) AS mean_cancel_rate,
                 STDDEV(cancellation_rate_pct) AS std_cancel_rate
             FROM MARTS.mart_daily_revenue
         )
-        SELECT 
+        SELECT
             r.order_date,
             r.city,
             r.gross_merchandise_value_gmv,
