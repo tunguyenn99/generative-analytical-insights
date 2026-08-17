@@ -1,4 +1,17 @@
+<div align="center">
+
 # 🖥️ Streamlit Web Application (`app/`)
+
+<p align="center">
+  <a href="#-english-version"><b>🇬🇧 English Version</b></a> | <a href="#-tiếng-việt-version"><b>🇻🇳 Tiếng Việt Version</b></a>
+</p>
+
+---
+
+</div>
+
+<a name="-english-version"></a>
+# 🇬🇧 Streamlit Web Application (English)
 
 The `app/` directory contains the multi-page **Streamlit** user interface and interactive web dashboard for the Zomato AI & Data Engineering platform.
 
@@ -42,10 +55,27 @@ app/
 
 ---
 
-## 🚀 Running the App
+<hr>
 
-Start the Streamlit application:
+<a name="-tiếng-việt-version"></a>
+# 🇻🇳 Giao Diện Web Streamlit (Tiếng Việt)
+
+Thư mục `app/` chứa mã nguồn ứng dụng web đa trang **Streamlit** cho hệ thống phân tích Zomato AI.
+
+---
+
+## 🎨 Tổng Quan Các Màn Hình
+
+1. **`app.py`**: Màn hình trang chủ Executive Overview hiển thị KPI tổng quan và trạng thái hoạt động thời gian thực của pipeline.
+2. **`1_📊_Analytics_Dashboard.py`**: Màn hình BI Analytics trực quan hóa xu hướng doanh thu GMV, tỷ lệ hủy đơn, xếp hạng nhà hàng và SLA thời gian giao hàng.
+3. **`2_💬_Review_RAG_Assistant.py`**: Trợ lý trí tuệ nhân tạo RAG tra cứu đánh giá khách hàng theo câu hỏi tự nhiên.
+4. **`3_🤖_Text_to_SQL_Query.py`**: Studio chuyển đổi câu hỏi tự nhiên thành câu lệnh SQL DuckDB và tự động vẽ biểu đồ trực quan.
+
+---
+
+## 🚀 Khởi Động Web App
+
 ```bash
 streamlit run app/app.py
 ```
-Open **`http://localhost:8501`** in your web browser.
+Truy cập ứng dụng tại địa chỉ: **`http://localhost:8501`**

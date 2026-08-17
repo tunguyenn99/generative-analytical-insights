@@ -1,6 +1,19 @@
+<div align="center">
+
 # ⏱️ Apache Airflow Orchestration (`airflow/`)
 
-The `airflow/` directory contains Apache Airflow DAG definitions for automated batch scheduling of the Zomato data engineering pipeline.
+<p align="center">
+  <a href="#-english-version"><b>🇬🇧 English Version</b></a> | <a href="#-tiếng-việt-version"><b>🇻🇳 Tiếng Việt Version</b></a>
+</p>
+
+---
+
+</div>
+
+<a name="-english-version"></a>
+# 🇬🇧 Apache Airflow Orchestration (English)
+
+The `airflow/` directory contains Apache Airflow DAG definitions for automated batch scheduling and daily incremental data ingestion for the Zomato data engineering pipeline.
 
 ---
 
@@ -9,33 +22,36 @@ The `airflow/` directory contains Apache Airflow DAG definitions for automated b
 ```
 airflow/
  └── dags/
-      └── zomato_batch_dag.py     # Main batch orchestration DAG definition
+      ├── zomato_batch_dag.py                # Main batch orchestration DAG definition
+      └── zomato_daily_incremental_dag.py    # Daily scheduled incremental ingestion DAG
 ```
 
 ---
 
-## 🔄 DAG Workflow (`zomato_batch_dag`)
+## 🔄 DAG Workflows
 
+### 1. Main Batch DAG (`zomato_batch_dag`)
 ```
-[t1_gen_data] ➔ [t2_s3_upload] ➔ [t3_raw_duckdb] ➔ [t4_dbt_build] ➔ [t5_enrich_reviews]
+[1_generate_raw_data] ➔ [2_upload_localstack_s3] ➔ [3_load_raw_duckdb] ➔ [4_dbt_build_medallion] ➔ [5_llm_enrich_reviews]
 ```
 
-### DAG Tasks Breakdown:
-1. **`t1_gen_data`** (`PythonOperator`): Generates synthetic raw CSV datasets into `data/raw/`.
-2. **`t2_s3_upload`** (`PythonOperator`): Ingests raw CSVs into AWS LocalStack S3 bucket `s3://zomato-data-lake/raw/`.
-3. **`t3_raw_duckdb`** (`PythonOperator`): Loads S3 CSV files into DuckDB `ZOMATO_RAW` Bronze schema.
-4. **`t4_dbt_build`** (`BashOperator`): Executes `dbt build` (compilation, medallion transformations, and 35 data tests).
-5. **`t5_enrich_reviews`** (`PythonOperator`): Runs Google Gemini AI sentiment and topic extraction on review dataset.
+### 2. Daily Incremental DAG (`zomato_daily_incremental_dag`)
+```
+[1_generate_incremental_data] ➔ [2_upload_localstack_s3] ➔ [3_load_raw_duckdb] ➔ [4_dbt_medallion_build]
+```
 
 ---
 
-## ⚙️ Execution & Triggering
+<hr>
 
-To test DAG execution locally without running full Airflow webserver:
-```bash
-python3 scripts/run_pipeline.py
-```
-Or with Airflow CLI:
-```bash
-airflow dags test zomato_batch_pipeline 2026-08-18
-```
+<a name="-tiếng-việt-version"></a>
+# 🇻🇳 Điều Phối Dữ Liệu Apache Airflow (Tiếng Việt)
+
+Thư mục `airflow/` chứa các định nghĩa Airflow DAGs định kỳ điều phối luồng dữ liệu tự động cho dự án Zomato Data Engineering.
+
+---
+
+## 🔄 Danh Sách DAGs
+
+1. **`zomato_batch_dag`**: DAG điều phối toàn bộ chuỗi batch từ tạo dữ liệu thô ➔ tải lên S3 ➔ nạp DuckDB ➔ dbt build ➔ Gemini LLM enrichment.
+2. **`zomato_daily_incremental_dag`**: DAG điều phối phát sinh dữ liệu ngẫu nhiên mới hàng ngày (`0 0 * * *`) và làm mới các tầng Medallion trong DuckDB.

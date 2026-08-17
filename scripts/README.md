@@ -1,6 +1,19 @@
+<div align="center">
+
 # 📜 Automation & Pipeline Scripts (`scripts/`)
 
-The `scripts/` directory contains Python automation scripts for data generation, LocalStack S3 landing ingestion, and pipeline execution.
+<p align="center">
+  <a href="#-english-version"><b>🇬🇧 English Version</b></a> | <a href="#-tiếng-việt-version"><b>🇻🇳 Tiếng Việt Version</b></a>
+</p>
+
+---
+
+</div>
+
+<a name="-english-version"></a>
+# 🇬🇧 Automation & Pipeline Scripts (English)
+
+The `scripts/` directory contains Python automation scripts for dataset generation, daily incremental appends, LocalStack S3 ingestion, and end-to-end pipeline execution.
 
 ---
 
@@ -8,43 +21,38 @@ The `scripts/` directory contains Python automation scripts for data generation,
 
 ```
 scripts/
- ├── init_localstack_s3.py    # Uploads raw CSV datasets to AWS LocalStack S3
- └── run_pipeline.py          # End-to-end pipeline execution runner
-generate_sample_data.py       # Synthetic Zomato dataset generator (in root)
+ ├── init_localstack_s3.py               # Uploads raw CSV datasets to AWS LocalStack S3
+ ├── load_raw_duckdb.py                  # Loads raw data into DuckDB Bronze schema
+ ├── generate_daily_incremental_data.py # Appends daily random rows into raw dataset
+ └── run_pipeline.py                     # End-to-end pipeline execution runner
+generate_sample_data.py                  # Synthetic Zomato dataset generator (root)
 ```
 
 ---
 
-## ⚙️ Script Descriptions
+## ⚙️ Core Scripts
 
-### 1. `generate_sample_data.py`
-- Generates 7 synthetic Zomato datasets into `data/raw/`:
-  - `restaurants.csv` (20 rows)
-  - `users.csv` (100 rows)
-  - `food.csv` (15 rows)
-  - `menu.csv` (149 rows)
-  - `orders.csv` (600 rows)
-  - `order_items.csv` (1468 rows)
-  - `reviews.csv` (250 rows)
-
-### 2. `init_localstack_s3.py`
-- Connects to AWS LocalStack S3 endpoint at `http://localhost:4566`.
-- Ensures bucket `s3://zomato-data-lake` exists.
-- Uploads all 7 CSV files into `s3://zomato-data-lake/raw/<table_name>/`.
-
-### 3. `run_pipeline.py`
-- Complete end-to-end pipeline runner executing all 5 steps sequentially:
-  1. Data Generation
-  2. LocalStack S3 Upload
-  3. DuckDB RAW Bronze Ingestion
-  4. dbt Medallion Build & Data Tests
-  5. Gemini LLM Review Enrichment
+1. **`generate_sample_data.py`**: Generates full synthetic Zomato dataset (7 CSV tables).
+2. **`generate_daily_incremental_data.py`**: Appends random daily rows (users, orders, order items, reviews) to dataset.
+3. **`init_localstack_s3.py`**: Uploads CSV datasets to AWS LocalStack S3 (`s3://zomato-data-lake/raw/`).
+4. **`load_raw_duckdb.py`**: Populates `ZOMATO_RAW` Bronze layer in DuckDB.
+5. **`run_pipeline.py`**: Executes the 5-step automated batch pipeline.
 
 ---
 
-## 🚀 Execution
+<hr>
 
-Run full end-to-end pipeline:
-```bash
-python3 scripts/run_pipeline.py
-```
+<a name="-tiếng-việt-version"></a>
+# 🇻🇳 Kịch Bản Tự Động Hóa & Pipeline (Tiếng Việt)
+
+Thư mục `scripts/` chứa các script Python thực thi nạp và phát sinh dữ liệu tự động cho hệ thống.
+
+---
+
+## ⚙️ Chi Tiết Kịch Bản
+
+1. **`generate_sample_data.py`**: Khởi tạo tập dữ liệu mẫu ban đầu gồm 7 bảng thô.
+2. **`generate_daily_incremental_data.py`**: Tự động tạo và nối thêm dữ liệu giao dịch ngẫu nhiên theo ngày hiện tại.
+3. **`init_localstack_s3.py`**: Đồng bộ dữ liệu thô vào LocalStack S3 Bucket.
+4. **`load_raw_duckdb.py`**: Nạp dữ liệu thô vào DuckDB Bronze layer.
+5. **`run_pipeline.py`**: Chạy toàn bộ pipeline tự động từ A-Z.
