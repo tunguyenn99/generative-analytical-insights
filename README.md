@@ -19,7 +19,8 @@ An end-to-end modern batch data engineering and generative AI analytics platform
 4. **Transformations & Quality Governance (dbt Core)**: Medallion Architecture (Bronze Raw ➔ Silver Staging ➔ Gold Business Marts) with 35+ automated data quality tests (`dbt test`) and full schema documentation (`docs.md`).
 5. **Code Quality & CI/CD Automation**: Automated pre-commit hooks (**Black** code formatter, **SQLFluff** SQL linter with DuckDB dialect) and GitHub Actions CI workflows (`ci_pipeline.yml`, `daily_incremental_pipeline.yml`).
 6. **Generative AI Layer (Google Gemini API - Free Tier)**: Natural language review sentiment enrichment, Vector RAG search, and Text-to-SQL query synthesis using `gemini-3.5-flash`.
-7. **Web Dashboard & User Interface (Streamlit)**: Multi-page UI featuring real-time KPIs, Plotly BI charts, RAG Q&A, and Text-to-SQL Query Studio.
+7. **Data Observability & Lineage Governance**: OpenLineage event metadata tracking, data freshness SLA monitoring, Z-score anomaly detection (`|z| > 2.0`), and Gemini AI Root-Cause Incident synthesis.
+8. **Containerized Production Deployment (Docker Compose)**: Full container orchestration for LocalStack S3 and Streamlit UI via `docker compose up -d`.
 
 ---
 

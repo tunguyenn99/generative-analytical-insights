@@ -19,7 +19,8 @@ Nền tảng phân tích dữ liệu batch hiện đại và trí tuệ nhân t�
 4. **Biến Đổi & Kiểm Duyệt Chất Lượng (dbt Core)**: Mô hình Medallion (Bronze Raw ➔ Silver Staging ➔ Gold Business Marts) đi kèm 35+ data quality assertions (`dbt test`) và tài liệu schema chuẩn (`docs.md`).
 5. **Chuẩn Hóa Mã Nguồn & CI/CD**: Kiểm tra mã nguồn tự động qua Pre-commit hooks (**Black** Python formatter, **SQLFluff** SQL linter với dialect DuckDB) và GitHub Actions Workflows (`ci_pipeline.yml`, `daily_incremental_pipeline.yml`).
 6. **Tầng Trí Tuệ Nhân Tạo (Google Gemini API - Free Tier)**: Phân tích cảm xúc đánh giá khách hàng, tìm kiếm vector RAG và chuyển đổi câu hỏi tự nhiên thành câu lệnh SQL (`gemini-3.5-flash`).
-7. **Giao Diện Web Phân Tích (Streamlit)**: Ứng dụng web đa trang hiển thị chỉ số KPI thời gian thực, biểu đồ Plotly, RAG Q&A và Text-to-SQL Query Studio.
+7. **Giám Sát Dữ Liệu & Lineage (Data Observability)**: Theo dõi sự kiện OpenLineage JSON, giám sát SLA độ tươi dữ liệu, phát hiện điểm bất thường Z-Score (`|z| > 2.0`) và tự động tổng hợp báo cáo Root-Cause bằng Gemini AI.
+8. **Đóng Gói Containerization (Docker Compose)**: Khởi chạy 100% hạ tầng LocalStack S3 và Streamlit Web Platform với 1 lệnh đơn duy nhất `docker compose up -d`.
 
 ---
 

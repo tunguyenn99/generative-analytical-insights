@@ -1,10 +1,9 @@
-import os
 from datetime import datetime, timedelta
 
 try:
     from airflow import DAG
-    from airflow.operators.python import PythonOperator
     from airflow.operators.bash import BashOperator
+    from airflow.operators.python import PythonOperator
 
     AIRFLOW_AVAILABLE = True
 except ImportError:
@@ -21,7 +20,9 @@ default_args = {
 
 
 def task_incremental_data():
-    from scripts.generate_daily_incremental_data import generate_daily_incremental_data
+    from scripts.generate_daily_incremental_data import (
+        generate_daily_incremental_data,
+    )
 
     generate_daily_incremental_data()
 
@@ -38,11 +39,19 @@ def task_load_duckdb():
     load_raw_tables()
 
 
+def task_data_observability():
+    from scripts.data_observability import run_data_observability_audit
+
+    run_data_observability_audit()
+
+
 if AIRFLOW_AVAILABLE:
     with DAG(
         "zomato_daily_incremental_ingestion",
         default_args=default_args,
-        description="Daily Incremental Batch Ingestion & dbt Medallion Refresh",
+        description=(
+            "Daily Incremental Batch Ingestion, dbt Medallion Refresh & Data" " Observability"
+        ),
         schedule_interval="0 0 * * *",
         catchup=False,
     ) as dag:
@@ -67,4 +76,9 @@ if AIRFLOW_AVAILABLE:
             bash_command="cd zomato_dbt && dbt build --profiles-dir .",
         )
 
-        t1_incremental >> t2_s3_upload >> t3_duckdb >> t4_dbt_build
+        t5_observability = PythonOperator(
+            task_id="5_data_observability_audit",
+            python_callable=task_data_observability,
+        )
+
+        (t1_incremental >> t2_s3_upload >> t3_duckdb >> t4_dbt_build >> t5_observability)

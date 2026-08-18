@@ -1,11 +1,9 @@
-import os
-import subprocess
 from datetime import datetime, timedelta
 
 try:
     from airflow import DAG
-    from airflow.operators.python import PythonOperator
     from airflow.operators.bash import BashOperator
+    from airflow.operators.python import PythonOperator
 
     AIRFLOW_AVAILABLE = True
 except ImportError:
@@ -46,11 +44,20 @@ def task_enrich_reviews():
     enrich_reviews_pipeline()
 
 
+def task_data_observability():
+    from scripts.data_observability import run_data_observability_audit
+
+    run_data_observability_audit()
+
+
 if AIRFLOW_AVAILABLE:
     with DAG(
         "zomato_end_to_end_batch",
         default_args=default_args,
-        description="End-to-End Zomato AI Data Pipeline (LocalStack S3 -> DuckDB -> dbt -> LLM AI)",
+        description=(
+            "End-to-End Zomato AI Data Pipeline (LocalStack S3 -> DuckDB -> dbt"
+            " -> LLM AI -> Observability)"
+        ),
         schedule_interval="@daily",
         catchup=False,
     ) as dag:
@@ -80,5 +87,17 @@ if AIRFLOW_AVAILABLE:
             python_callable=task_enrich_reviews,
         )
 
+        t6_observability = PythonOperator(
+            task_id="6_data_observability_audit",
+            python_callable=task_data_observability,
+        )
+
         # Pipeline DAG dependencies
-        t1_gen_data >> t2_s3_upload >> t3_raw_duckdb >> t4_dbt_build >> t5_enrich_reviews
+        (
+            t1_gen_data
+            >> t2_s3_upload
+            >> t3_raw_duckdb
+            >> t4_dbt_build
+            >> t5_enrich_reviews
+            >> t6_observability
+        )

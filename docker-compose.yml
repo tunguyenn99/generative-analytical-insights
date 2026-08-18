@@ -2,14 +2,28 @@ version: '3.8'
 
 services:
   localstack:
+    image: localstack/localstack:latest
     container_name: zomato_localstack
-    image: localstack/localstack:3.0.0
     ports:
-      - "4566:4566"            # LocalStack Web Gateway & S3 Endpoint
-      - "4510-4559:4510-4559"  # External services port range
+      - "4566:4566"
     environment:
+      - SERVICES=s3
       - AWS_DEFAULT_REGION=us-east-1
-      - DEBUG=1
     volumes:
-      - "./aws/localstack_init.sh:/etc/localstack/init/ready.d/init_s3.sh"
-      - "./data/raw:/data/raw"
+      - "./data/localstack:/var/lib/localstack"
+
+  streamlit_app:
+    build: .
+    container_name: zomato_streamlit_app
+    ports:
+      - "8501:8501"
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - ".:/app"
+    depends_on:
+      - localstack
