@@ -12,6 +12,8 @@ permissions:
 jobs:
   daily-incremental-ingestion:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: .
 
     steps:
       - name: Checkout Code

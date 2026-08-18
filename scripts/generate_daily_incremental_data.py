@@ -1,7 +1,11 @@
 import os
+import sys
 import random
 import pandas as pd
 from datetime import datetime, timedelta
+
+# Ensure project root directory is in sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 DATA_DIR = "data/raw"
 
