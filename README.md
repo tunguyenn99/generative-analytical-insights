@@ -6,6 +6,13 @@
 
 An end-to-end modern batch data engineering and generative AI analytics platform. Built locally with **AWS LocalStack S3**, **DuckDB Data Warehouse**, **dbt Medallion Architecture**, **Apache Airflow**, **Google Gemini AI (`gemini-3.5-flash`)**, **Pre-Commit / CI Quality Governance**, and an interactive multi-page **Streamlit Web Application**.
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://generative-analytical-insights-by-tunguyenn99.streamlit.app/)
+[![GitHub Actions CI](https://github.com/tunguyenn99/generative-analytical-insights/actions/workflows/ci_pipeline.yml/badge.svg)](https://github.com/tunguyenn99/generative-analytical-insights/actions)
+[![Daily Incremental Ingestion](https://github.com/tunguyenn99/generative-analytical-insights/actions/workflows/daily_incremental_pipeline.yml/badge.svg)](https://github.com/tunguyenn99/generative-analytical-insights/actions)
+
+> 🚀 **Live Production Web Application**: Experience the interactive platform live on Streamlit Cloud:
+> **👉 [https://generative-analytical-insights-by-tunguyenn99.streamlit.app/](https://generative-analytical-insights-by-tunguyenn99.streamlit.app/)**
+
 ---
 
 ## 📐 Architecture Diagram & Data Flow (Excalidraw Format)
@@ -20,7 +27,7 @@ An end-to-end modern batch data engineering and generative AI analytics platform
 5. **Code Quality & CI/CD Automation**: Automated pre-commit hooks (**Black** code formatter, **SQLFluff** SQL linter with DuckDB dialect) and GitHub Actions CI workflows (`ci_pipeline.yml`, `daily_incremental_pipeline.yml`).
 6. **Generative AI Layer (Google Gemini API - Free Tier)**: Natural language review sentiment enrichment, Vector RAG search, and Text-to-SQL query synthesis using `gemini-3.5-flash`.
 7. **Data Observability & Lineage Governance**: OpenLineage event metadata tracking, data freshness SLA monitoring, Z-score anomaly detection (`|z| > 2.0`), and Gemini AI Root-Cause Incident synthesis.
-8. **Containerized Production Deployment (Docker Compose)**: Full container orchestration for LocalStack S3 and Streamlit UI via `docker compose up -d`.
+8. **Containerized & Cloud Deployment**: Full container orchestration via Docker Compose and live cloud deployment on Streamlit Cloud.
 
 ---
 

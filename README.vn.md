@@ -6,6 +6,13 @@
 
 Nền tảng phân tích dữ liệu batch hiện đại và trí tuệ nhân tạo Generative AI end-to-end. Dự án được phát triển hoàn toàn ở môi trường Local tích hợp **AWS LocalStack S3**, **DuckDB Data Warehouse**, **dbt Medallion Architecture**, **Apache Airflow**, **Google Gemini AI (`gemini-3.5-flash`)**, **Pre-Commit / CI Quality Governance**, và ứng dụng web đa trang **Streamlit**.
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://generative-analytical-insights-by-tunguyenn99.streamlit.app/)
+[![GitHub Actions CI](https://github.com/tunguyenn99/generative-analytical-insights/actions/workflows/ci_pipeline.yml/badge.svg)](https://github.com/tunguyenn99/generative-analytical-insights/actions)
+[![Daily Incremental Ingestion](https://github.com/tunguyenn99/generative-analytical-insights/actions/workflows/daily_incremental_pipeline.yml/badge.svg)](https://github.com/tunguyenn99/generative-analytical-insights/actions)
+
+> 🚀 **Trải Nghiệm Web Demo Live**: Truy cập trực tiếp ứng dụng phân tích trên Streamlit Cloud tại:
+> **👉 [https://generative-analytical-insights-by-tunguyenn99.streamlit.app/](https://generative-analytical-insights-by-tunguyenn99.streamlit.app/)**
+
 ---
 
 ## 📐 Sơ Đồ Kiến Trúc & Luồng Dữ Liệu (Chuẩn Excalidraw)
@@ -20,7 +27,7 @@ Nền tảng phân tích dữ liệu batch hiện đại và trí tuệ nhân t�
 5. **Chuẩn Hóa Mã Nguồn & CI/CD**: Kiểm tra mã nguồn tự động qua Pre-commit hooks (**Black** Python formatter, **SQLFluff** SQL linter với dialect DuckDB) và GitHub Actions Workflows (`ci_pipeline.yml`, `daily_incremental_pipeline.yml`).
 6. **Tầng Trí Tuệ Nhân Tạo (Google Gemini API - Free Tier)**: Phân tích cảm xúc đánh giá khách hàng, tìm kiếm vector RAG và chuyển đổi câu hỏi tự nhiên thành câu lệnh SQL (`gemini-3.5-flash`).
 7. **Giám Sát Dữ Liệu & Lineage (Data Observability)**: Theo dõi sự kiện OpenLineage JSON, giám sát SLA độ tươi dữ liệu, phát hiện điểm bất thường Z-Score (`|z| > 2.0`) và tự động tổng hợp báo cáo Root-Cause bằng Gemini AI.
-8. **Đóng Gói Containerization (Docker Compose)**: Khởi chạy 100% hạ tầng LocalStack S3 và Streamlit Web Platform với 1 lệnh đơn duy nhất `docker compose up -d`.
+8. **Đóng Gói Containerization & Cloud**: Khởi chạy 100% hạ tầng LocalStack S3 qua Docker Compose và triển khai trực tuyến trên Streamlit Cloud.
 
 ---
 
