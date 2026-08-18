@@ -56,6 +56,19 @@ An end-to-end modern batch data engineering and generative AI analytics platform
 
 ---
 
+### 5. 🚨 Data Observability & Gemini AI Root-Cause Analysis
+![Data Observability & Lineage](images/data_observability.png)
+- **Statistical Outlier Detection**: Scatter plot tracking daily revenue and cancellation rate anomalies ($|Z\text{-score}| > 2.0$).
+- **Gemini Root-Cause Synthesis**: Interactive AI generation of executive incident reports with root causes and action items.
+
+---
+
+### 6. 🌀 Apache Airflow Orchestration & DAG Pipelines
+![Airflow DAGs Overview](images/airflow_dags_overview.png)
+- **Automated Airflow DAGs**: Visual graph view for end-to-end batch ingestion (`zomato_end_to_end_batch`) and daily incremental batch refreshes (`zomato_daily_incremental_ingestion`).
+
+---
+
 ## 💻 Backend Pipeline Execution & Terminal Outputs
 
 ### 1. 🚀 End-to-End Pipeline Execution (`scripts/run_pipeline.py`)

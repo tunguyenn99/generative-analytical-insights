@@ -56,6 +56,19 @@ Nền tảng phân tích dữ liệu batch hiện đại và trí tuệ nhân t�
 
 ---
 
+### 5. 🚨 Data Observability & Gemini AI Root-Cause Analysis
+![Data Observability & Lineage](images/data_observability.png)
+- **Phát Hiện Điểm Dị Biệt Thống Kê**: Biểu đồ phân tán theo dõi doanh thu và tỷ lệ hủy đơn bất thường ($|Z\text{-score}| > 2.0$).
+- **Tổng Hợp Báo Cáo Gemini AI**: Tự động sinh báo cáo nguyên nhân gốc và đề xuất khắc phục trực tiếp trên giao diện.
+
+---
+
+### 6. 🌀 Apache Airflow Orchestration UI
+![Airflow DAGs Overview](images/airflow_dags_overview.png)
+- **Lập Lịch Tự Động Airflow**: Giao diện trực quan cho 2 DAGs (`zomato_end_to_end_batch` và `zomato_daily_incremental_ingestion`).
+
+---
+
 ## 🛠️ So Sánh Công Nghệ Sử Dụng
 
 | Thành Phần Pipeline | Chuẩn Cloud Production | Môi Trường Local Production | Ưu Điểm & Lý Do Lựa Chọn |
