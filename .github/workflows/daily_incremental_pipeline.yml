@@ -6,6 +6,9 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   daily-incremental-ingestion:
     runs-on: ubuntu-latest
@@ -13,6 +16,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
@@ -36,4 +41,18 @@ jobs:
       - name: Execute dbt Medallion Transformations & Tests
         run: |
           cd zomato_dbt
-          dbt build
+          dbt build --profiles-dir .
+
+      - name: Execute AI LLM Review Enrichment & Observability
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python ai/enrich_reviews.py
+          python scripts/data_observability.py
+
+      - name: Commit & Push Updated DuckDB Database to GitHub
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'cron(data): daily incremental data ingestion & warehouse refresh'
+          branch: main
+          file_pattern: 'data/warehouse/zomato_dw.duckdb data/raw/*.csv data/observability/*'
