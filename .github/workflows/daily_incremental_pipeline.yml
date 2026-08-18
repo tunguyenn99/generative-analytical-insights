@@ -57,4 +57,5 @@ jobs:
         with:
           commit_message: 'cron(data): daily incremental data ingestion & warehouse refresh'
           branch: main
-          file_pattern: 'data/warehouse/zomato_dw.duckdb data/raw/*.csv data/observability/*'
+          file_pattern: 'data/warehouse/zomato_dw.duckdb data/observability/*'
+          add_options: '-f'
