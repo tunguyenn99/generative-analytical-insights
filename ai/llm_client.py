@@ -77,6 +77,7 @@ class LLMClient:
                         f"⚠️ Gemini model '{model_candidate}' error: {e}. Trying next candidate..."
                     )
             print("⚠️ All Gemini models exhausted. Falling back to Local Engine.")
+            self.provider = "local"
 
         # OpenAI Execution
         elif self.provider == "openai" and self.openai_client:
