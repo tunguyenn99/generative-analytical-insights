@@ -1,4 +1,11 @@
+import os
+import sys
 from datetime import datetime, timedelta
+
+# Ensure project root is in sys.path and set working directory context
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
 try:
     from airflow import DAG
@@ -9,7 +16,6 @@ try:
 except ImportError:
     AIRFLOW_AVAILABLE = False
 
-# Default args for Airflow DAG
 default_args = {
     "owner": "data_engineering_team",
     "depends_on_past": False,
@@ -21,30 +27,35 @@ default_args = {
 
 
 def task_generate_raw_data():
+    os.chdir(PROJECT_ROOT)
     from generate_sample_data import generate_zomato_dataset
 
     generate_zomato_dataset()
 
 
 def task_upload_localstack_s3():
+    os.chdir(PROJECT_ROOT)
     from scripts.init_localstack_s3 import upload_raw_data_to_s3
 
     upload_raw_data_to_s3()
 
 
 def task_load_raw_duckdb():
+    os.chdir(PROJECT_ROOT)
     from scripts.load_raw_duckdb import load_raw_tables
 
     load_raw_tables()
 
 
 def task_enrich_reviews():
+    os.chdir(PROJECT_ROOT)
     from ai.enrich_reviews import enrich_reviews_pipeline
 
     enrich_reviews_pipeline()
 
 
 def task_data_observability():
+    os.chdir(PROJECT_ROOT)
     from scripts.data_observability import run_data_observability_audit
 
     run_data_observability_audit()
@@ -79,7 +90,7 @@ if AIRFLOW_AVAILABLE:
 
         t4_dbt_build = BashOperator(
             task_id="4_dbt_build_medallion",
-            bash_command="cd zomato_dbt && dbt build --profiles-dir .",
+            bash_command=f"cd {PROJECT_ROOT}/zomato_dbt && dbt build --profiles-dir .",
         )
 
         t5_enrich_reviews = PythonOperator(
@@ -92,7 +103,6 @@ if AIRFLOW_AVAILABLE:
             python_callable=task_data_observability,
         )
 
-        # Pipeline DAG dependencies
         (
             t1_gen_data
             >> t2_s3_upload

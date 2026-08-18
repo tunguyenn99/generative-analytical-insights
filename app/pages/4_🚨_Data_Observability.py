@@ -11,9 +11,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 from ai.anomaly_insights import generate_anomaly_narrative
 from scripts.data_observability import run_data_observability_audit
 
-st.set_page_config(
-    page_title="Data Observability & Lineage", page_icon="🚨", layout="wide"
-)
+st.set_page_config(page_title="Data Observability & Lineage", page_icon="🚨", layout="wide")
 
 st.title("🚨 AI-Powered Data Observability & Lineage Studio")
 st.markdown(
@@ -56,7 +54,9 @@ st.subheader("📊 Statistical Anomaly Feed (Z-Score Threshold = 2.0)")
 
 if os.path.exists(DB_PATH):
     con = duckdb.connect(DB_PATH, read_only=True)
-    df_rev = con.execute("SELECT * FROM MARTS.mart_daily_revenue ORDER BY order_date DESC;").fetchdf()
+    df_rev = con.execute(
+        "SELECT * FROM MARTS.mart_daily_revenue ORDER BY order_date DESC;"
+    ).fetchdf()
     con.close()
 
     if not df_rev.empty:
@@ -68,9 +68,20 @@ if os.path.exists(DB_PATH):
         df_anomalies = df_rev[df_rev["gmv_zscore"].abs() > 2.0]
 
         if not df_anomalies.empty:
-            st.warning(f"⚠️ Detected {len(df_anomalies)} statistical anomalies in daily revenue metrics!")
+            st.warning(
+                f"⚠️ Detected {len(df_anomalies)} statistical anomalies in daily revenue metrics!"
+            )
             st.dataframe(
-                df_anomalies[["order_date", "city", "gross_merchandise_value_gmv", "total_orders", "cancellation_rate_pct", "gmv_zscore"]],
+                df_anomalies[
+                    [
+                        "order_date",
+                        "city",
+                        "gross_merchandise_value_gmv",
+                        "total_orders",
+                        "cancellation_rate_pct",
+                        "gmv_zscore",
+                    ]
+                ],
                 use_container_width=True,
             )
         else:
@@ -86,7 +97,11 @@ if os.path.exists(DB_PATH):
             size="total_orders",
             hover_data=["city", "cancellation_rate_pct", "gmv_zscore"],
             title="Daily GMV Distribution & Outlier Detection",
-            labels={"gross_merchandise_value_gmv": "GMV (₹)", "order_date": "Date", "color": "Is Outlier"},
+            labels={
+                "gross_merchandise_value_gmv": "GMV (₹)",
+                "order_date": "Date",
+                "color": "Is Outlier",
+            },
             template="plotly_dark",
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -98,23 +113,27 @@ st.subheader("🤖 Google Gemini Executive Root-Cause Incident Analysis")
 if st.button("🧠 Synthesize Root-Cause Analysis Report with Gemini AI"):
     with st.spinner("Synthesizing statistical metrics into executive briefing..."):
         anomalies_list = []
-        if 'df_anomalies' in locals() and not df_anomalies.empty:
+        if "df_anomalies" in locals() and not df_anomalies.empty:
             for _, row in df_anomalies.head(5).iterrows():
-                anomalies_list.append({
-                    "date": str(row["order_date"]),
-                    "city": row["city"],
-                    "gmv": float(row["gross_merchandise_value_gmv"]),
-                    "z_score": round(float(row["gmv_zscore"]), 2),
-                    "cancellation_rate": float(row["cancellation_rate_pct"]),
-                })
+                anomalies_list.append(
+                    {
+                        "date": str(row["order_date"]),
+                        "city": row["city"],
+                        "gmv": float(row["gross_merchandise_value_gmv"]),
+                        "z_score": round(float(row["gmv_zscore"]), 2),
+                        "cancellation_rate": float(row["cancellation_rate_pct"]),
+                    }
+                )
         else:
-            anomalies_list.append({
-                "date": "2024-02-25",
-                "city": "Hyderabad",
-                "gmv": 6662.0,
-                "z_score": 3.41,
-                "cancellation_rate": 0.0,
-            })
+            anomalies_list.append(
+                {
+                    "date": "2024-02-25",
+                    "city": "Hyderabad",
+                    "gmv": 6662.0,
+                    "z_score": 3.41,
+                    "cancellation_rate": 0.0,
+                }
+            )
 
         narrative = generate_anomaly_narrative(anomalies_list)
         st.markdown("### 📑 Gemini AI Executive Incident Report:")
