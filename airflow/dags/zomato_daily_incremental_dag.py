@@ -52,7 +52,7 @@ if AIRFLOW_AVAILABLE:
         description=(
             "Daily Incremental Batch Ingestion, dbt Medallion Refresh & Data" " Observability"
         ),
-        schedule_interval="0 0 * * *",
+        schedule="0 0 * * *",
         catchup=False,
     ) as dag:
 

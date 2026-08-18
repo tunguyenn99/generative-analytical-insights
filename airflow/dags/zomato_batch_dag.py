@@ -58,7 +58,7 @@ if AIRFLOW_AVAILABLE:
             "End-to-End Zomato AI Data Pipeline (LocalStack S3 -> DuckDB -> dbt"
             " -> LLM AI -> Observability)"
         ),
-        schedule_interval="@daily",
+        schedule="@daily",
         catchup=False,
     ) as dag:
 
