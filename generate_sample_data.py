@@ -199,7 +199,10 @@ def generate_zomato_dataset(output_dir="data/raw", force=False):
     order_item_id = 1
 
     start_date = datetime(2024, 1, 1)
-    for order_id in range(1, 601):
+    end_date = datetime.now()
+    total_days = max(1, (end_date - start_date).days)
+
+    for order_id in range(1, 1501):
         user = random.choice(users)
         restaurant = random.choice(restaurants)
         r_id = restaurant["restaurant_id"]
@@ -210,10 +213,13 @@ def generate_zomato_dataset(output_dir="data/raw", force=False):
             continue
 
         order_dt = start_date + timedelta(
-            days=random.randint(0, 180),
+            days=random.randint(0, total_days),
             hours=random.randint(10, 22),
             minutes=random.randint(0, 59),
         )
+        if order_dt > end_date:
+            order_dt = end_date - timedelta(minutes=random.randint(5, 120))
+
         status = random.choice(statuses)
 
         if status == "DELIVERED":
@@ -284,7 +290,7 @@ def generate_zomato_dataset(output_dir="data/raw", force=False):
 
     reviews = []
     delivered_orders = df_orders[df_orders["order_status"] == "DELIVERED"]
-    sampled_orders = delivered_orders.sample(n=min(250, len(delivered_orders)))
+    sampled_orders = delivered_orders.sample(n=min(500, len(delivered_orders)))
 
     for rev_id, (_, ord_row) in enumerate(sampled_orders.iterrows(), start=1):
         rand_val = random.random()

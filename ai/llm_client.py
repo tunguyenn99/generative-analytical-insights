@@ -73,9 +73,16 @@ class LLMClient:
                     )
                     return response.text.strip()
                 except Exception as e:
+                    err_msg = str(e)
                     print(
-                        f"⚠️ Gemini model '{model_candidate}' error: {e}. Trying next candidate..."
+                        f"⚠️ Gemini model '{model_candidate}' error: {err_msg[:120]}. Trying next candidate..."
                     )
+                    if "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg or "Quota" in err_msg:
+                        print(
+                            "⚠️ Gemini API quota limit reached. Switching immediately to Local Engine."
+                        )
+                        self.provider = "local"
+                        return self._local_fallback_completion(system_prompt, user_prompt)
             print("⚠️ All Gemini models exhausted. Falling back to Local Engine.")
             self.provider = "local"
 
