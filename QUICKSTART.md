@@ -1,22 +1,33 @@
-# 🚀 Comprehensive Step-by-Step Setup Guide
+# 🚀 Master Setup & Execution Guide (All Tools & Modules)
 
-This guide will walk you from zero to running the complete **Zomato AI & Data Engineering Intelligence Platform** locally using Bash, Python virtual environment (`.venv`), environment variables (`.env`), dbt Core, DuckDB, Google Gemini AI, and Streamlit.
-
----
-
-## 📋 Prerequisites
-
-Make sure you have installed on your machine:
-- **Python 3.10+** (Check via `python3 --version`)
-- **Git** (Check via `git --version`)
-- *(Optional)* **Docker & Docker Compose** (For running AWS LocalStack S3 container)
+This comprehensive guide details how to set up, configure, and execute **every tool, pipeline, and module** in the **Zomato AI & Data Engineering Intelligence Platform** from scratch using Bash.
 
 ---
 
-## 🛠️ Step 1: Clone Repository & Navigate to Directory
+## 📑 Table of Contents
+1. [Prerequisites & System Setup](#1-prerequisites--system-setup)
+2. [Environment Configuration (.venv & .env)](#2-environment-configuration-venv--env)
+3. [Infrastructure & Cloud Emulation (AWS LocalStack S3)](#3-infrastructure--cloud-emulation-aws-localstack-s3)
+4. [Apache Airflow Orchestration Setup](#4-apache-airflow-orchestration-setup)
+5. [End-to-End Pipeline Execution](#5-end-to-end-pipeline-execution)
+6. [dbt Core Medallion & Documentation Tools](#6-dbt-core-medallion--documentation-tools)
+7. [Generative AI & LLM Tools Execution](#7-generative-ai--llm-tools-execution)
+8. [Data Observability & OpenLineage Governance](#8-data-observability--openlineage-governance)
+9. [Daily Incremental Data Generation](#9-daily-incremental-data-generation)
+10. [Streamlit Multi-Page Web Application](#10-streamlit-multi-page-web-application)
+11. [Code Quality & CI/CD Governance (Pre-Commit, Black, SQLFluff)](#11-code-quality--cicd-governance-pre-commit-black-sqlfluff)
 
-Open your Linux / macOS Terminal or WSL Bash and run:
+---
 
+## 1. Prerequisites & System Setup
+
+Ensure the following tools are installed on your Linux / macOS / WSL machine:
+- **Python 3.10+** (Verify: `python3 --version`)
+- **Git** (Verify: `git --version`)
+- **Docker & Docker Compose** (Verify: `docker compose version`)
+- *(Optional)* **AWS CLI** (For inspecting LocalStack S3 buckets)
+
+Clone the repository and enter the project directory:
 ```bash
 git clone https://github.com/tunguyenn99/generative-analytical-insights.git
 cd generative-analytical-insights
@@ -24,111 +35,220 @@ cd generative-analytical-insights
 
 ---
 
-## 🐍 Step 2: Create & Activate Python Virtual Environment (`venv`)
+## 2. Environment Configuration (.venv & .env)
 
-Create a isolated Python environment named `.venv`:
-
+### A. Create & Activate Virtual Environment (`.venv`)
 ```bash
-# Create virtual environment
+# Create python virtual environment
 python3 -m venv .venv
 
-# Activate virtual environment on Linux/macOS/WSL:
+# Activate virtual environment
 source .venv/bin/activate
 
-# (Optional) Verify that active python points to .venv:
-which python3
+# Upgrade pip
+pip install --upgrade pip
 ```
 
----
-
-## 🔑 Step 3: Configure Environment Variables (`.env`)
-
-Create your `.env` file from `.env.example`:
-
+### B. Configure Environment Variables (`.env`)
+Copy the template file `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` in your text editor (e.g. `nano .env` or VSCode) and add your **Google Gemini API Key** (Free tier available at [https://ai.google.dev/](https://ai.google.dev/)):
-
+Open `.env` in your text editor and add your **Google Gemini API Key** (Get free key at [https://ai.google.dev/](https://ai.google.dev/)):
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 DUCKDB_PATH=data/warehouse/zomato_dw.duckdb
 OPENLINEAGE_URL=http://localhost:5000
 ```
 
-> 💡 *Note: If you do not have a Gemini API key, the platform will automatically fall back to the built-in Local AI Engine.*
-
----
-
-## 📦 Step 4: Install Dependencies
-
-Upgrade `pip` and install all required Python libraries:
-
+### C. Install All Dependencies
 ```bash
-pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-*(Optional for developers)* Enable automated pre-commit code formatting hooks:
-```bash
-pre-commit install
-```
-
 ---
 
-## 🐳 Step 5: (Optional) Launch Infrastructure via Docker
+## 3. Infrastructure & Cloud Emulation (AWS LocalStack S3)
 
-If you want to emulate AWS S3 storage using LocalStack:
-
+### A. Start AWS LocalStack S3 Container
 ```bash
 docker compose up -d
 ```
 
+### B. Initialize S3 Bucket & Landing Zone Data
+```bash
+python3 scripts/init_localstack_s3.py
+```
+
+### C. Verify S3 Bucket Contents via AWS CLI (Optional)
+```bash
+aws --endpoint-url=http://localhost:4566 s3 ls s3://zomato-data-lake/raw/
+```
+
 ---
 
-## ⚙️ Step 6: Run End-to-End Data & AI Pipeline
+## 4. Apache Airflow Orchestration Setup
 
-You can run the entire pipeline with a single command:
+### A. Export Airflow Home Directory
+```bash
+export AIRFLOW_HOME=$(pwd)/airflow
+```
 
+### B. Run Airflow Standalone
+```bash
+airflow standalone
+```
+> Access Airflow UI at **[http://localhost:8080](http://localhost:8080)** to view and trigger DAGs:
+> - `zomato_end_to_end_batch`: Full batch ingestion & transformation pipeline.
+> - `zomato_daily_incremental_ingestion`: Daily incremental batch schedule.
+
+---
+
+## 5. End-to-End Pipeline Execution
+
+### A. One-Command Master Execution
+To execute the complete data & AI pipeline automatically:
 ```bash
 python3 scripts/run_pipeline.py
 ```
 
-### 🔄 What `run_pipeline.py` automatically executes:
-1. **Raw Data Generation**: Generates 1,500 synthetic orders & 500 reviews across 2024–2026 (`generate_sample_data.py`).
-2. **LocalStack S3 Ingestion**: Uploads CSV files to S3 bucket `s3://zomato-data-lake/raw/` (`scripts/init_localstack_s3.py`).
-3. **DuckDB Raw Loading**: Loads Bronze `RAW` schema tables into `data/warehouse/zomato_dw.duckdb` (`scripts/load_raw_duckdb.py`).
-4. **dbt Medallion Transformations & Tests**: Executes `dbt build` across Bronze ➔ Silver ➔ Gold schemas with 35+ data tests.
-5. **Generative AI Enrichment**: Runs sentiment & aspect classification on customer reviews (`ai/enrich_reviews.py`).
-6. **Data Observability Audit**: Runs SLA freshness check, OpenLineage telemetry logging, and Z-score anomaly detection (`scripts/data_observability.py`).
+### B. Step-by-Step Manual Pipeline Execution
+If you prefer running each pipeline step manually:
+```bash
+# Step 1: Generate synthetic raw Zomato datasets (2024-2026)
+python3 generate_sample_data.py
+
+# Step 2: Load raw tables into DuckDB warehouse (Bronze RAW schema)
+python3 scripts/load_raw_duckdb.py
+
+# Step 3: Run dbt Medallion transformations & tests
+cd zomato_dbt && dbt build --profiles-dir . && cd ..
+
+# Step 4: Run AI review enrichment (Sentiment & Aspect extraction)
+python3 ai/enrich_reviews.py
+
+# Step 5: Run Data Observability & OpenLineage audit
+python3 scripts/data_observability.py
+```
 
 ---
 
-## 🌐 Step 7: Launch Interactive Streamlit Web Application
+## 6. dbt Core Medallion & Documentation Tools
 
-Start the multi-page Streamlit web app:
+Navigate to the dbt project folder:
+```bash
+cd zomato_dbt
+```
 
+### A. dbt Build (Models + Tests)
+```bash
+dbt build --profiles-dir .
+```
+
+### B. dbt Test Only
+```bash
+dbt test --profiles-dir .
+```
+
+### C. dbt Interactive Documentation Site
+Generate and serve the interactive dbt schema lineage docs site:
+```bash
+dbt docs generate --profiles-dir .
+dbt docs serve --port 8088 --profiles-dir .
+```
+> Open browser at **[http://localhost:8088](http://localhost:8088)** to view full DAG lineage and schema documentation.
+
+### D. Verify dbt Semantic Layer
+```bash
+cd ..
+python3 scripts/verify_semantic_layer.py
+```
+
+---
+
+## 7. Generative AI & LLM Tools Execution
+
+All AI tools support **Google Gemini API (`gemini-3.5-flash`)** with automatic fallback to the **Local Engine**:
+
+### A. LLM Review Sentiment Enrichment
+```bash
+python3 ai/enrich_reviews.py
+```
+
+### B. Review Vector RAG Search Assistant (CLI Mode)
+```bash
+python3 ai/rag_chat.py
+```
+
+### C. Text-to-SQL Query Synthesizer (CLI Mode)
+```bash
+python3 ai/text_to_sql.py
+```
+
+### D. Gemini AI Root-Cause Anomaly Analysis
+```bash
+python3 ai/anomaly_insights.py
+```
+
+---
+
+## 8. Data Observability & OpenLineage Governance
+
+Run data freshness SLA checks, Z-score outlier detection, and OpenLineage metadata logging:
+```bash
+python3 scripts/data_observability.py
+```
+> Output JSON metadata is saved at `data/observability/openlineage_events.json`.
+
+---
+
+## 9. Daily Incremental Data Generation
+
+Simulate a daily batch data ingestion cycle (appends new orders & reviews to raw datasets):
+```bash
+python3 scripts/generate_daily_incremental_data.py
+```
+
+---
+
+## 10. Streamlit Multi-Page Web Application
+
+Launch the interactive multi-page web app:
 ```bash
 streamlit run app/app.py
 ```
-
 or:
-
 ```bash
 python3 -m streamlit run app/app.py
 ```
-
-After running, open your web browser at:
-👉 **[http://localhost:8501](http://localhost:8501)**
+> Open browser at **[http://localhost:8501](http://localhost:8501)** to access:
+> - 🏠 **Executive Overview**: System Status & Pipeline KPIs.
+> - 📊 **BI Analytics**: GMV Trends, Cancellation Rates, Top Restaurants, SLA Durations.
+> - 💬 **Review RAG Assistant**: Vector Similarity & LLM Sentiment Search.
+> - 🤖 **Text-to-SQL Studio**: Natural Language SQL Query Engine.
+> - 🚨 **Data Observability**: Anomaly Scatter Plots & Gemini AI Incident Synthesis.
 
 ---
 
-## 🧪 Handy Commands Quick Reference
+## 11. Code Quality & CI/CD Governance (Pre-Commit, Black, SQLFluff)
 
-| Action | Command |
-| :--- | :--- |
-| **Run Daily Incremental Data Job** | `python3 scripts/generate_daily_incremental_data.py` |
-| **Run dbt Models & Quality Tests** | `cd zomato_dbt && dbt build --profiles-dir . && cd ..` |
-| **Run RAG Assistant CLI Query** | `python3 ai/rag_chat.py` |
-| **Run Code Format & SQL Linter** | `pre-commit run --all-files` |
+### A. Install Pre-Commit Hooks
+```bash
+pre-commit install
+```
+
+### B. Run Black Code Formatter
+```bash
+black .
+```
+
+### C. Run SQLFluff Linter (DuckDB Dialect)
+```bash
+sqlfluff lint zomato_dbt/models --dialect duckdb
+```
+
+### D. Run All Pre-Commit Checks Manually
+```bash
+pre-commit run --all-files
+```
