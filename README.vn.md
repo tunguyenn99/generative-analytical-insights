@@ -12,6 +12,8 @@ Nền tảng phân tích dữ liệu batch hiện đại và trí tuệ nhân t�
 
 > 🚀 **Trải Nghiệm Web Demo Live**: Truy cập trực tiếp ứng dụng phân tích trên Streamlit Cloud tại:
 > **👉 [https://generative-analytical-insights-by-tunguyenn99.streamlit.app/](https://generative-analytical-insights-by-tunguyenn99.streamlit.app/)**
+>
+> 📖 **Hướng Dẫn Chạy Local Chi Tiết**: Xem hướng dẫn từng bước từ Bash, venv, pipeline đến Streamlit: **[QUICKSTART.md](QUICKSTART.md)**
 
 ---
 

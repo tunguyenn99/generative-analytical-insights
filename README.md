@@ -12,6 +12,8 @@ An end-to-end modern batch data engineering and generative AI analytics platform
 
 > 🚀 **Live Production Web Application**: Experience the interactive platform live on Streamlit Cloud:
 > **👉 [https://generative-analytical-insights-by-tunguyenn99.streamlit.app/](https://generative-analytical-insights-by-tunguyenn99.streamlit.app/)**
+>
+> 📖 **Local Setup & Execution Guide**: Follow the step-by-step instructions to run locally: **[QUICKSTART.md](QUICKSTART.md)**
 
 ---
 
