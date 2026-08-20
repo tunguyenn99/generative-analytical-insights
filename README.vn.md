@@ -15,7 +15,7 @@ Nền tảng phân tích dữ liệu batch hiện đại và trí tuệ nhân t�
 
 ---
 
-## 📐 Sơ Đồ Kiến Trúc & Luồng Dữ Liệu (Chuẩn Excalidraw)
+## 📐 Sơ Đồ Kiến Trúc & Luồng Dữ Liệu
 
 ![Data Architecture Diagram](images/architecture_diagram.png)
 

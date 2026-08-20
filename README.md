@@ -15,7 +15,7 @@ An end-to-end modern batch data engineering and generative AI analytics platform
 
 ---
 
-## 📐 Architecture Diagram & Data Flow (Excalidraw Format)
+## 📐 Architecture Diagram & Data Flow
 
 ![Data Architecture Diagram](images/architecture_diagram.png)
 
