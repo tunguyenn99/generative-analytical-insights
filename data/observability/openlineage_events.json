@@ -1,6 +1,6 @@
 {
   "eventType": "COMPLETE",
-  "eventTime": "2026-09-05T03:48:53.856132Z",
+  "eventTime": "2026-09-06T03:52:26.182358Z",
   "producer": "https://github.com/tunguyenn99/generative-analytical-insights",
   "schemaURL": "https://openlineage.io/spec/1-0-5/OpenLineage.json#/$defs/RunEvent",
   "job": {
@@ -44,7 +44,7 @@
       "facets": {
         "dataQualityMetrics": {
           "freshnessHoursLag": -19.0,
-          "anomaliesDetectedCount": 277
+          "anomaliesDetectedCount": 274
         }
       }
     }
