@@ -1,6 +1,6 @@
 {
   "eventType": "COMPLETE",
-  "eventTime": "2026-11-11T05:31:08.282844Z",
+  "eventTime": "2026-11-12T06:36:31.833528Z",
   "producer": "https://github.com/tunguyenn99/generative-analytical-insights",
   "schemaURL": "https://openlineage.io/spec/1-0-5/OpenLineage.json#/$defs/RunEvent",
   "job": {
@@ -43,8 +43,8 @@
       "name": "MARTS.mart_daily_revenue",
       "facets": {
         "dataQualityMetrics": {
-          "freshnessHoursLag": -17.0,
-          "anomaliesDetectedCount": 282
+          "freshnessHoursLag": -16.0,
+          "anomaliesDetectedCount": 275
         }
       }
     }
